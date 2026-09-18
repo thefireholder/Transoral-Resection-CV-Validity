@@ -14,14 +14,16 @@ FIG_DIR = RESULT / "figures"
 # (its numbers are not collected yet -- see README "SAM2").
 # ---------------------------------------------------------------------------
 # Every model key that can appear anywhere. label = legend / panel title, short = table header,
-# color = Okabe-Ito (colour-blind safe).
+# color = Okabe-Ito (colour-blind safe), ls/lw = line style/width where models share an axis (Fig 2 per-class,
+# Fig 5) -- curves that coincide (SAM3 (YOLO boxes) sits on YOLO's) stay visible because the later one is dashed
+# and drawn on top of a slightly thicker solid line. Draw order = dict order.
 ALL_MODELS = {
-    "maskrcnn":     {"label": "Mask R-CNN",               "short": "Mask R-CNN",  "color": "#0072B2"},
-    "yolo":         {"label": "YOLO11n-seg",              "short": "YOLO11n",     "color": "#E69F00"},
-    "sam3_yolobox": {"label": "SAM3 (YOLO boxes)",        "short": "SAM3+YOLO",   "color": "#009E73"},
-    "sam3_text":    {"label": "SAM3 (text prompt, zero-shot)", "short": "SAM3 text", "color": "#56B4E9"},
-    "sam3_gtbox":   {"label": "SAM3 (GT boxes, oracle)",  "short": "SAM3 GTbox", "color": "#999999"},
-    "monai":        {"label": "MONAI UNet",               "short": "MONAI",       "color": "#CC79A7"},
+    "maskrcnn":     {"label": "Mask R-CNN",               "short": "Mask R-CNN",  "color": "#0072B2", "ls": "-",  "lw": 1.6},
+    "yolo":         {"label": "YOLO11n-seg",              "short": "YOLO11n",     "color": "#E69F00", "ls": "-",  "lw": 2.4},
+    "sam3_yolobox": {"label": "SAM3 (YOLO boxes)",        "short": "SAM3+YOLO",   "color": "#009E73", "ls": "--", "lw": 1.4},
+    "sam3_text":    {"label": "SAM3 (text prompt, zero-shot)", "short": "SAM3 text", "color": "#56B4E9", "ls": ":", "lw": 1.6},
+    "sam3_gtbox":   {"label": "SAM3 (GT boxes, oracle)",  "short": "SAM3 GTbox", "color": "#999999", "ls": ":",  "lw": 1.6},
+    "monai":        {"label": "MONAI UNet",               "short": "MONAI",       "color": "#CC79A7", "ls": "-.", "lw": 1.4},
 }
 # The MAIN comparison (Figs 1b, 2, 3, 4): one column per system. SAM3 enters as the two-stage
 # YOLO-boxes -> SAM3 pipeline (decision 2026-09-18: the zero-shot text-prompted SAM3 scores ~0.03 mAP on

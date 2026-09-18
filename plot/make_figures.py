@@ -282,13 +282,14 @@ def _fig2(layout):
             ax = axes[k // ncol, k % ncol]
             ax.set_title(cls, fontsize=8)
             any_ = False
-            for m in C.MODELS:
+            for z, m in enumerate(C.MODELS):
                 d = curves[m]
+                style = dict(color=C.MODELS[m]["color"], linestyle=C.MODELS[m].get("ls", "-"),
+                             linewidth=C.MODELS[m].get("lw", 1.4), zorder=2 + z)
                 if d and cls in d["classes"]:
-                    ax.plot(d["recall"], d["classes"][cls]["precision"], color=C.MODELS[m]["color"],
-                            label=C.MODELS[m]["label"]); any_ = True
+                    ax.plot(d["recall"], d["classes"][cls]["precision"], label=C.MODELS[m]["label"], **style); any_ = True
                 else:
-                    ax.plot([], [], color=C.MODELS[m]["color"], label=f"{C.MODELS[m]['label']} ({C.NP_TEXT})")
+                    ax.plot([], [], label=f"{C.MODELS[m]['label']} ({C.NP_TEXT})", **style)
             if not any_:
                 np_panel(ax)
             ax.set_xlim(0, 1); ax.set_ylim(0, 1.02)
@@ -505,7 +506,7 @@ def fig5():
             continue
         xs = sorted(pts); ys = [np.mean(pts[k]) for k in xs]; es = [np.std(pts[k]) for k in xs]
         ax.errorbar(xs, ys, yerr=es if any(es) else None, marker="o", ms=4, capsize=2,
-                    color=C.MODELS[m]["color"], label=C.MODELS[m]["label"])
+                    color=C.MODELS[m]["color"], linestyle=C.MODELS[m].get("ls", "-"), label=C.MODELS[m]["label"])
         drawn = True
     if not drawn:
         np_panel(ax, f"{C.NP_TEXT}\n(data/dataset_size_sweep.csv empty -- see scripts/rerun/dataset_size_sweep/)")
