@@ -69,6 +69,20 @@ sam3_text,test,reported,posterior pharyngeal wall,n/p,n/p,n/p,n/p,n/p,n/p
 sam3_text,test,reported,prevertebral fascia,n/p,n/p,n/p,n/p,n/p,n/p
 sam3_text,test,reported,soft palate,n/p,n/p,n/p,n/p,n/p,n/p
 sam3_text,test,reported,suction,n/p,n/p,n/p,n/p,n/p,n/p
+sam3_text,test,recomputed,base of tongue,0.104541,0.060490,0.086123,0.614286,0.792739,0.880801
+sam3_text,test,recomputed,bipolar,0.025203,0.017840,0.307692,0.062500,0.838090,0.911852
+sam3_text,test,recomputed,bot,0.130612,0.104512,0.110820,1.000000,0.887018,0.940117
+sam3_text,test,recomputed,cut,0.006817,0.002617,0.086420,0.050360,0.688315,0.814350
+sam3_text,test,recomputed,endotracheal tube,0.000000,0.000000,0.000000,0.000000,n/p,n/p
+sam3_text,test,recomputed,ligasure,0.000000,0.000000,0.000000,0.000000,n/p,n/p
+sam3_text,test,recomputed,maryland,0.062016,0.038369,0.312945,0.034483,0.812787,0.889099
+sam3_text,test,recomputed,medial pterygoid muscle,0.000000,0.000000,0.000000,0.000000,n/p,n/p
+sam3_text,test,recomputed,monopolar,0.000000,0.000000,0.000000,0.000000,n/p,n/p
+sam3_text,test,recomputed,parapharyngeal fat,0.000000,0.000000,0.000000,0.000000,n/p,n/p
+sam3_text,test,recomputed,posterior pharyngeal wall,0.000000,0.000000,0.000000,0.000000,n/p,n/p
+sam3_text,test,recomputed,prevertebral fascia,0.000000,0.000000,n/p,0.000000,n/p,n/p
+sam3_text,test,recomputed,soft palate,0.000000,0.000000,n/p,0.000000,n/p,n/p
+sam3_text,test,recomputed,suction,0.068661,0.053734,0.066758,0.217949,0.896075,0.943980
 sam3_yolobox,test,reported,base of tongue,n/p,n/p,n/p,n/p,n/p,n/p
 sam3_yolobox,test,reported,bipolar,n/p,n/p,n/p,n/p,n/p,n/p
 sam3_yolobox,test,reported,bot,n/p,n/p,n/p,n/p,n/p,n/p
@@ -83,6 +97,20 @@ sam3_yolobox,test,reported,posterior pharyngeal wall,n/p,n/p,n/p,n/p,n/p,n/p
 sam3_yolobox,test,reported,prevertebral fascia,n/p,n/p,n/p,n/p,n/p,n/p
 sam3_yolobox,test,reported,soft palate,n/p,n/p,n/p,n/p,n/p,n/p
 sam3_yolobox,test,reported,suction,n/p,n/p,n/p,n/p,n/p,n/p
+sam3_yolobox,test,recomputed,base of tongue,0.423556,0.279921,0.785195,0.365644,0.813014,0.891709
+sam3_yolobox,test,recomputed,bipolar,0.504950,0.504950,1.000000,0.000000,0.969060,0.984282
+sam3_yolobox,test,recomputed,bot,1.000000,0.806366,0.982678,1.000000,0.896027,0.945157
+sam3_yolobox,test,recomputed,cut,0.616013,0.116384,0.634494,0.733813,0.589054,0.739430
+sam3_yolobox,test,recomputed,endotracheal tube,1.000000,0.902700,1.000000,0.999747,0.934405,0.966018
+sam3_yolobox,test,recomputed,ligasure,0.000000,0.000000,n/p,0.000000,n/p,n/p
+sam3_yolobox,test,recomputed,maryland,0.433822,0.293859,0.418084,0.696552,0.848114,0.914434
+sam3_yolobox,test,recomputed,medial pterygoid muscle,0.691843,0.418307,0.987778,0.672131,0.803510,0.889551
+sam3_yolobox,test,recomputed,monopolar,0.357145,0.305673,0.330243,0.439024,0.905657,0.949658
+sam3_yolobox,test,recomputed,parapharyngeal fat,0.779419,0.452536,0.968991,0.694541,0.789062,0.880467
+sam3_yolobox,test,recomputed,posterior pharyngeal wall,0.435208,0.196257,0.623750,0.296296,0.748621,0.851623
+sam3_yolobox,test,recomputed,prevertebral fascia,0.000000,0.000000,0.000000,0.000000,n/p,n/p
+sam3_yolobox,test,recomputed,soft palate,0.184054,0.130290,0.452453,0.261745,0.854091,0.918149
+sam3_yolobox,test,recomputed,suction,0.558768,0.425690,0.336031,0.846154,0.868704,0.927254
 sam3_gtbox,test,reported,base of tongue,0.984757,0.734053,n/p,n/p,0.848900,0.916200
 sam3_gtbox,test,reported,bipolar,0.995000,0.791554,n/p,n/p,0.887900,0.938500
 sam3_gtbox,test,reported,bot,0.995000,0.814516,n/p,n/p,0.897400,0.945900

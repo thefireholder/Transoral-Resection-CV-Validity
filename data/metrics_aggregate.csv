@@ -4,7 +4,9 @@ maskrcnn,test,recomputed,0.516022,0.338353,0.647523,0.518671,0.806174,0.888201,1
 yolo,test,reported,0.576000,0.389500,0.646900,0.571000,n/p,n/p,14
 yolo,test,recomputed,0.542900,0.378792,0.696340,0.526704,0.809588,0.888830,14
 sam3_text,test,reported,n/p,n/p,n/p,n/p,n/p,n/p,0
+sam3_text,test,recomputed,0.028418,0.019826,0.080897,0.141398,0.839961,0.909199,14
 sam3_yolobox,test,reported,n/p,n/p,n/p,n/p,n/p,n/p,0
+sam3_yolobox,test,recomputed,0.498913,0.345210,0.655361,0.500403,0.808557,0.887457,14
 sam3_gtbox,test,reported,0.965294,0.693078,n/p,n/p,0.797449,0.869210,14
 sam3_gtbox,test,recomputed,0.969697,0.668673,0.976633,0.976633,0.830700,0.903909,14
 monai,test,reported,n/p,n/p,n/p,n/p,n/p,n/p,0

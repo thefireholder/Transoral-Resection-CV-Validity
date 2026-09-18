@@ -196,3 +196,46 @@ Then on the cluster:  python scripts/collect_results.py && python plot/make_figu
 
 CHANGES MADE ON THIS MACHINE (append below)
 --------------------------------------------
+
+2026-09-17  (Claude Code session on Quadro RTX 3000 laptop)
+
+run_local.sh patches (cluster keeps overwriting on pull; re-apply after every git pull):
+  - conda activation block: added `set +u`/`set -u` around activate (IsaacLab's
+    setup_conda_env.sh references $ZSH_VERSION unbound under bash set -u)
+  - added anaconda3 fallback path (this machine has anaconda3, not miniforge3)
+  - added `unset PYTHONPATH` after conda activate (IsaacLab bundles old scipy/idna/
+    certifi that shadow the conda env packages and cause import errors)
+  - added sam3_text and sam3_yolobox steps (steps 5a/5b) to run_local.sh
+
+data.yaml path fix:
+  - processed_data/yolo_format/1200images/data.yaml: changed `path:` to local
+    /home/sangjoon/Desktop/school/cimed/vinay/processed_data/yolo_format/1200images
+
+New scripts built from scratch:
+  - scripts/rerun/sam3/sam3_text_prompt.py  -- zero-shot text prompt, uses prompts.json
+    source vocabulary (JSR/JML), writes data/predictions/sam3_text_test.json + counts CSV
+  - scripts/rerun/sam3/sam3_yolo_box_prompt.py  -- two-stage YOLO-box prompt, reads
+    data/predictions/yolo_test.json, writes data/predictions/sam3_yolobox_test.json
+
+OOM fix applied to both new scripts (critical for 6 GB GPU):
+  - post_process_instance_segmentation runs on CPU: after model(**inputs), move all
+    output tensors to CPU via _cpu() helper, call torch.cuda.empty_cache(), then
+    call processor.post_process_instance_segmentation(outputs_cpu, ...)
+  - Without this fix: 1.59 GiB OOM at masks=(masks>threshold).to(torch.long) for
+    1920x1080 full-res mask upsampling with many instances per text prompt
+
+Packages installed into isaaclab env (--ignore-installed to bypass PYTHONPATH issues):
+  ultralytics, pycocotools, transformers>=5, idna, certifi, anyio, sniffio,
+  requests, psutil, matplotlib, opencv-python, pillow, pyyaml, scipy, scikit-learn,
+  tqdm, tensorboard
+
+Jobs completed on this machine (all with CONDA_ENV=isaaclab):
+  sam3 (GT-box prompt): data/predictions/sam3_gtbox_test.json
+  maskrcnn (12-epoch retrain, --adopt): data/predictions/maskrcnn_test.json
+  yolo (60-epoch retrain): data/predictions/yolo_test.json
+  monai (100-epoch UNet, --adopt): data/predictions/monai_test.json
+  sam3_text (zero-shot text prompt): data/predictions/sam3_text_test.json
+  sam3_yolobox (YOLO-box prompt): data/predictions/sam3_yolobox_test.json
+
+Post-processing (metrics, figures) ran automatically via run_local.sh post() calls.
+fig3b_sam3_prompt_ablation.png now has all three SAM3 rows filled.

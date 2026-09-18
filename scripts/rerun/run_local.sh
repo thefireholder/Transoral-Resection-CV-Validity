@@ -55,9 +55,13 @@ export TORS_SHARED="${TORS_SHARED:-$(cd "$RESULT/.." && pwd)}"
 LOG="$HERE/logs/local"; mkdir -p "$LOG"
 cd "$RESULT"
 
+set +u  # isaaclab activate scripts reference ZSH_VERSION which is unset in bash
 if [ -f "$HOME/miniforge3/etc/profile.d/conda.sh" ]; then source "$HOME/miniforge3/etc/profile.d/conda.sh";
+elif [ -f "$HOME/anaconda3/etc/profile.d/conda.sh" ]; then source "$HOME/anaconda3/etc/profile.d/conda.sh";
 elif command -v conda >/dev/null; then eval "$(conda shell.bash hook)"; fi
 conda activate "$CONDA_ENV" || { echo "cannot activate conda env $CONDA_ENV"; exit 1; }
+set -u
+unset PYTHONPATH  # remove IsaacLab bundled-package paths that shadow conda env's scipy/matplotlib/etc.
 
 DO_SWEEP=0; ONLY=""; DRY=0
 while [ $# -gt 0 ]; do case "$1" in
