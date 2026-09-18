@@ -99,8 +99,9 @@ FIG1B_FALLBACK_CROP = "right_half"            # "right_half" | "left_half" | Non
 # ---------------------------------------------------------------------------
 # Figure 2  PR curves (mask, IoU 0.5)
 # ---------------------------------------------------------------------------
-FIG2_LAYOUT = "per_model"     # "per_model": one panel per model, a line per class (like MaskPR_curve.png)
-                              # "per_class": one panel per class, a line per model
+FIG2_LAYOUTS = ["per_model", "per_class"]   # both are always rendered:
+                              # "per_model": one panel per model, a line per CLASS (class colours, like MaskPR_curve.png)
+                              # "per_class": one panel per class, a line per MODEL (model colours)
 FIG2_SHOW_MEAN = True
 
 # ---------------------------------------------------------------------------

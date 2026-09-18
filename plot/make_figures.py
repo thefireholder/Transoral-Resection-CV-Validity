@@ -239,8 +239,14 @@ def _pr(model):
 
 
 def fig2():
+    """Renders EVERY layout in C.FIG2_LAYOUTS so no stale file is left behind."""
+    for layout in C.FIG2_LAYOUTS:
+        _fig2(layout)
+
+
+def _fig2(layout):
     curves = {m: _pr(m) for m in C.MODELS}
-    if C.FIG2_LAYOUT == "per_model":
+    if layout == "per_model":
         n = len(C.MODELS)
         fig, axes = plt.subplots(1, n, figsize=(3.4 * n, 3.6), squeeze=False)
         for ax, m in zip(axes[0], C.MODELS):
@@ -289,11 +295,11 @@ def fig2():
         for k in range(len(C.CLASSES), nrow * ncol):
             axes[k // ncol, k % ncol].axis("off")
         h, l = axes[0, 0].get_legend_handles_labels()
-        fig.legend(h, l, loc="lower center", ncol=len(C.MODELS), frameon=False, bbox_to_anchor=(0.5, -0.01))
-        fig.supxlabel("recall"); fig.supylabel("precision")
-        fig.tight_layout(rect=(0, 0.04, 1, 1))
+        fig.legend(h, l, loc="lower center", ncol=len(C.MODELS), frameon=False, bbox_to_anchor=(0.5, 0.0))
+        fig.supxlabel("recall", y=0.045); fig.supylabel("precision")
+        fig.tight_layout(rect=(0, 0.07, 1, 1))
     fig.suptitle(f"Mask precision-recall (IoU 0.5), {C.SPLIT} split", y=1.02)
-    save(fig, f"fig2_pr_curves_{C.FIG2_LAYOUT}")
+    save(fig, f"fig2_pr_curves_{layout}")
 
 
 # ---------------------------------------------------------------------------
