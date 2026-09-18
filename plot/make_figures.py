@@ -297,94 +297,134 @@ def fig2():
 
 
 # ---------------------------------------------------------------------------
-# Figure 3  mAP table
+# Figure 3  mAP table  (and the shared table builder used by Figure 3b)
 # ---------------------------------------------------------------------------
-def fig3():
-    (per, per_filled), (agg, agg_filled) = per_class_table(), aggregate_table()
-    metric_label = {"AP50": "AP@0.5", "AP50_95": "AP@0.5:0.95", "precision": "P", "recall": "R",
-                    "iou": "IoU", "dice": "Dice"}
-    agg_key = {"AP50": "mAP50", "AP50_95": "mAP50_95"}
-    header = ["class"] + [f"{C.MODELS[m]['short']}\n{metric_label[k]}" for m in C.MODELS for k in C.FIG3_METRICS]
-    rows = []
-    for cls in C.CLASSES:
-        rows.append([cls] + [per[m].get(cls, {}).get(k, np.nan) for m in C.MODELS for k in C.FIG3_METRICS])
-    rows.append(["mean (aggregate)"] + [agg.get(m, {}).get(agg_key.get(k, k), np.nan)
-                                        for m in C.MODELS for k in C.FIG3_METRICS])
+METRIC_LABEL = {"AP50": "AP@0.5", "AP50_95": "AP@0.5:0.95", "precision": "P", "recall": "R", "iou": "IoU", "dice": "Dice"}
+AGG_KEY = {"AP50": "mAP50", "AP50_95": "mAP50_95"}
+
+
+def _per_class_ap_table(models, metrics, stem, title, extra_agg=None, footnotes=()):
+    """Per-class table: one row per class + 'mean (aggregate)'; columns = model x metric.
+    extra_agg: list of (aggregate metric key, label) appended as extra rows (values under every model's first
+    metric column, other columns blank) -- used by Fig 3b for P/R/IoU/Dice."""
+    (per, per_filled), (agg, agg_filled) = per_class_table(models=models), aggregate_table(models=models)
+    header = ["class"] + [f"{C.ALL_MODELS[m]['short']}\n{METRIC_LABEL[k]}" for m in models for k in metrics]
+    rows = [[cls] + [per[m].get(cls, {}).get(k, np.nan) for m in models for k in metrics] for cls in C.CLASSES]
+    rows.append(["mean (aggregate)"] + [agg.get(m, {}).get(AGG_KEY.get(k, k), np.nan) for m in models for k in metrics])
+    n_main = len(rows)
+    for key, lab in (extra_agg or []):
+        r = [lab]
+        for m in models:
+            r += [agg.get(m, {}).get(key, np.nan)] + [""] * (len(metrics) - 1)
+        rows.append(r)
 
     def cell(v, star=False):
         if isinstance(v, float):
             return C.NP_TEXT if np.isnan(v) else f"{v:.{C.FIG3_DECIMALS}f}" + ("*" if star else "")
         return str(v)
     text = []
-    for r in rows:
+    for r_i, r in enumerate(rows):
         cls = r[0]
-        stars = [(m, cls, k) in per_filled if cls != "mean (aggregate)" else (m, agg_key.get(k, k)) in agg_filled
-                 for m in C.MODELS for k in C.FIG3_METRICS]
+        stars = []
+        for m in models:
+            for k in metrics:
+                if r_i < len(C.CLASSES):
+                    stars.append((m, cls, k) in per_filled)
+                elif r_i == len(C.CLASSES):
+                    stars.append((m, AGG_KEY.get(k, k)) in agg_filled)
+                else:
+                    stars.append((m, (extra_agg or [])[r_i - n_main][0]) in agg_filled)
         text.append([cell(r[0])] + [cell(v, st) for v, st in zip(r[1:], stars)])
     any_star = any("*" in c for r in text for c in r)
 
     ncol = len(header)
-    widths = [0.22] + [0.78 / (ncol - 1)] * (ncol - 1)
-    fig, ax = plt.subplots(figsize=(2.0 + 0.85 * (ncol - 1), 0.27 * (len(rows) + 3)))
+    widths = [0.20] + [0.80 / (ncol - 1)] * (ncol - 1)
+    fig, ax = plt.subplots(figsize=(2.2 + 0.95 * (ncol - 1), 0.27 * (len(rows) + 3) + 0.25 * len(footnotes)))
     ax.axis("off")
     tab = ax.table(cellText=text, colLabels=header, colWidths=widths, loc="center", cellLoc="center")
     tab.auto_set_font_size(False); tab.set_fontsize(7); tab.scale(1, 1.25)
     for (r, c), cellobj in tab.get_celld().items():
         cellobj.set_edgecolor("0.8")
-        if r == 0 or r == len(rows):
+        if r == 0 or r == n_main:
             cellobj.set_text_props(weight="bold")
         if r == 0:
             cellobj.set_facecolor("0.93"); cellobj.set_height(cellobj.get_height() * 2)
+        if r > n_main:
+            cellobj.set_facecolor("0.97")
         if c == 0:
             cellobj.set_text_props(ha="left"); cellobj.PAD = 0.03
-    # bold best per metric column (per class row)
-    for r_i, r in enumerate(rows[:-1] + [rows[-1]], start=1):
-        for k_i, k in enumerate(C.FIG3_METRICS):
-            vals = [(r[1 + m_i * len(C.FIG3_METRICS) + k_i], m_i) for m_i in range(len(C.MODELS))]
+    # bold best per metric column (per class row and the aggregate row)
+    for r_i in range(1, n_main + 1):
+        r = rows[r_i - 1]
+        for k_i, k in enumerate(metrics):
+            vals = [(r[1 + m_i * len(metrics) + k_i], m_i) for m_i in range(len(models))]
             vals = [(v, m_i) for v, m_i in vals if isinstance(v, float) and not np.isnan(v)]
             if vals:
                 best = max(vals)[1]
-                tab[r_i, 1 + best * len(C.FIG3_METRICS) + k_i].set_text_props(weight="bold")
-    ax.set_title(f"Mask AP per class, {C.SPLIT} split  (source: {C.METRIC_SOURCE})", fontsize=9)
+                tab[r_i, 1 + best * len(metrics) + k_i].set_text_props(weight="bold")
+    ax.set_title(title, fontsize=9)
+    y = 0.09
     if any_star:
-        fig.text(0.14, 0.09, f"* taken from source={_other(C.METRIC_SOURCE)} (missing in {C.METRIC_SOURCE})", fontsize=6, color="0.35")
-    save(fig, "fig3_map_table")
+        fig.text(0.14, y, f"* taken from source={_other(C.METRIC_SOURCE)} (missing in {C.METRIC_SOURCE})", fontsize=6, color="0.35")
+        y -= 0.035
+    for line in footnotes:
+        fig.text(0.14, y, line, fontsize=6, color="0.35"); y -= 0.035
+    save(fig, stem)
 
-    stem = C.FIG_DIR / "fig3_map_table"
+    out = C.FIG_DIR / stem
+    hdr = [h.replace("\n", " ") for h in header]
     if "csv" in C.FIG3_ALSO_WRITE:
-        with open(stem.with_suffix(".csv"), "w", newline="") as f:
-            w = csv.writer(f); w.writerow([h.replace("\n", " ") for h in header]); w.writerows(text)
+        with open(out.with_suffix(".csv"), "w", newline="") as f:
+            w = csv.writer(f); w.writerow(hdr); w.writerows(text)
     if "md" in C.FIG3_ALSO_WRITE:
-        with open(stem.with_suffix(".md"), "w") as f:
-            f.write("| " + " | ".join(h.replace("\n", " ") for h in header) + " |\n")
-            f.write("|" + "---|" * len(header) + "\n")
+        with open(out.with_suffix(".md"), "w") as f:
+            f.write("| " + " | ".join(hdr) + " |\n|" + "---|" * len(hdr) + "\n")
             for r in text:
                 f.write("| " + " | ".join(r) + " |\n")
     if "tex" in C.FIG3_ALSO_WRITE:
-        with open(stem.with_suffix(".tex"), "w") as f:
-            f.write("\\begin{tabular}{l" + "r" * (len(header) - 1) + "}\n\\toprule\n")
-            f.write(" & ".join(h.replace("\n", " ") for h in header) + " \\\\\n\\midrule\n")
-            for r in text[:-1]:
+        with open(out.with_suffix(".tex"), "w") as f:
+            f.write("\\begin{tabular}{l" + "r" * (len(hdr) - 1) + "}\n\\toprule\n")
+            f.write(" & ".join(hdr) + " \\\\\n\\midrule\n")
+            for r in text[:n_main - 1]:
                 f.write(" & ".join(r) + " \\\\\n")
-            f.write("\\midrule\n" + " & ".join(text[-1]) + " \\\\\n\\bottomrule\n\\end{tabular}\n")
+            f.write("\\midrule\n")
+            for r in text[n_main - 1:]:
+                f.write(" & ".join(r) + " \\\\\n")
+            f.write("\\bottomrule\n\\end{tabular}\n")
+
+
+def fig3():
+    _per_class_ap_table(list(C.MODELS), C.FIG3_METRICS, "fig3_map_table",
+                        f"Mask AP per class, {C.SPLIT} split  (source: {C.METRIC_SOURCE})")
 
 
 # ---------------------------------------------------------------------------
-# Figure 3b  SAM3 prompting ablation (aggregate metrics per prompt condition)
+# Figure 3b  SAM3 prompting ablation: per-class AP for each prompt condition (+ YOLO reference)
 # ---------------------------------------------------------------------------
 def fig3b():
+    models = list(C.FIG3B_ROWS) + list(C.FIG3B_REFERENCE)
+    notes = [f"{C.ALL_MODELS[k]['short']}: {C.FIG3B_NOTES[k]}" for k in models if k in C.FIG3B_NOTES]
+    _per_class_ap_table(models, C.FIG3B_METRICS, "fig3b_sam3_prompt_ablation_per_class",
+                        f"SAM3 prompting ablation -- mask AP per class, {C.SPLIT} split  (source: {C.METRIC_SOURCE})",
+                        extra_agg=C.FIG3B_EXTRA_AGG, footnotes=notes)
+
+
+# ---------------------------------------------------------------------------
+# Figure 3c  SAM3 prompting ablation: aggregate metrics per prompt condition, one row each
+# ---------------------------------------------------------------------------
+def fig3c():
     rows_keys = list(C.FIG3B_ROWS) + list(C.FIG3B_REFERENCE)
     agg, filled = aggregate_table(models=rows_keys)
-    header = ["SAM3 prompt condition"] + [lab for _, lab in C.FIG3B_METRICS] + ["what it tests"]
+    header = ["SAM3 prompt condition"] + [lab for _, lab in C.FIG3C_METRICS] + ["what it tests"]
     text = []
     for k in rows_keys:
         vals = []
-        for m, _ in C.FIG3B_METRICS:
+        for m, _ in C.FIG3C_METRICS:
             v = agg.get(k, {}).get(m, np.nan)
             vals.append(C.NP_TEXT if np.isnan(v) else f"{v:.3f}" + ("*" if (k, m) in filled else ""))
         text.append([C.ALL_MODELS[k]["label"]] + vals + [C.FIG3B_NOTES.get(k, "")])
     ncol = len(header)
-    widths = [0.16] + [0.08] * len(C.FIG3B_METRICS) + [0.36]
+    widths = [0.16] + [0.08] * len(C.FIG3C_METRICS) + [0.36]
     fig, ax = plt.subplots(figsize=(14, 0.45 * (len(text) + 2)))
     ax.axis("off")
     tab = ax.table(cellText=text, colLabels=header, colWidths=widths, loc="center", cellLoc="center")
@@ -396,11 +436,11 @@ def fig3b():
         if c in (0, ncol - 1):
             cell.set_text_props(ha="left"); cell.PAD = 0.02
         if r == len(C.FIG3B_ROWS) + 1 and C.FIG3B_REFERENCE:      # rule above the reference rows
-            cell.visible_edges = "TBLR"; cell.set_linewidth(1.2)
-    ax.set_title(f"SAM3 prompting ablation, {C.SPLIT} split  (source: {C.METRIC_SOURCE}; "
+            cell.set_linewidth(1.2)
+    ax.set_title(f"SAM3 prompting ablation -- aggregate, {C.SPLIT} split  (source: {C.METRIC_SOURCE}; "
                  f"P/R at the F1-max confidence, IoU/Dice over matched instances)", fontsize=9)
-    save(fig, "fig3b_sam3_prompt_ablation")
-    stem = C.FIG_DIR / "fig3b_sam3_prompt_ablation"
+    save(fig, "fig3c_sam3_prompt_ablation_aggregate")
+    stem = C.FIG_DIR / "fig3c_sam3_prompt_ablation_aggregate"
     with open(stem.with_suffix(".csv"), "w", newline="") as f:
         w = csv.writer(f); w.writerow(header); w.writerows(text)
     with open(stem.with_suffix(".md"), "w") as f:
@@ -470,7 +510,7 @@ def fig5():
     save(fig, "fig5_dataset_size")
 
 
-FIGS = {"1a": fig1a, "1b": fig1b, "2": fig2, "3": fig3, "3b": fig3b, "4": fig4, "5": fig5}
+FIGS = {"1a": fig1a, "1b": fig1b, "2": fig2, "3": fig3, "3b": fig3b, "3c": fig3c, "4": fig4, "5": fig5}
 
 
 if __name__ == "__main__":

@@ -81,7 +81,8 @@ result/
 │   ├── plot_config.py            EVERY knob: model list/order/colours/labels, class order, metric source, layouts, fonts, dpi
 │   └── make_figures.py           fig1a fig1b fig2 fig3 fig4 fig5 — each an independent function reading only data/
 └── figures/                      fig1a_training_curves, fig1b_qualitative, fig2_pr_curves_{per_model,per_class},
-                                  fig3_map_table (+ .csv/.md/.tex), fig3b_sam3_prompt_ablation (+ .csv/.md),
+                                  fig3_map_table (+ .csv/.md/.tex), fig3b_sam3_prompt_ablation_per_class (+ .csv/.md/.tex),
+                                  fig3c_sam3_prompt_ablation_aggregate (+ .csv/.md),
                                   fig4_aggregate_bars, fig5_dataset_size   (.png + .pdf)
 ```
 
@@ -117,10 +118,10 @@ for the gated `facebook/sam3`. `run_local.sh` defaults to Mask R-CNN batch 2 / l
 | **1a** training curve: loss | train ✔ val ✔ (12-epoch rerun) | train ✔ val ✔ (60 epochs) | — (not trained) | train ✔ val ✔ (98 epochs, §5c) |
 | **1a** training curve: train-split P/R | ✔ (12-ep rerun) | ✔ (rerun) | — | ✔ (retrain, §5c) |
 | **1a** training curve: val-split P/R | ✔ | ✔ | — | ✔ |
-| **1b** overlay pred vs GT | ✔ | ✔ | text-prompt: **n/p** until the laptop run (§5e); GT-box ✔ | ✔ (retrain) |
-| **2** mask PR curve per class | ✔ (original curves were **box**-based; these are mask) | ✔ | text-prompt **n/p** (§5e); GT-box ✔ | ✔ (retrain) |
-| **3** mAP table per class + aggregate | ✔ | ✔ | text-prompt **n/p**; Fig 3b has GT-box | ✔ (all 14 classes after retrain) |
-| **4** mAP / Dice / IoU bars | ✔ | ✔ | text-prompt **n/p** | ✔ (all `recomputed`, same definition) |
+| **1b** overlay pred vs GT | ✔ | ✔ | ✔ text-prompt (§5e) | ✔ (retrain) |
+| **2** mask PR curve per class | ✔ (original curves were **box**-based; these are mask) | ✔ | ✔ text-prompt | ✔ (retrain) |
+| **3** mAP table per class + aggregate | ✔ | ✔ | ✔ text-prompt; Fig 3b/3c: all 3 conditions | ✔ (all 14 classes after retrain) |
+| **4** mAP / Dice / IoU bars | ✔ | ✔ | ✔ text-prompt | ✔ (all `recomputed`, same definition) |
 | **5** dataset-size sweep | **n/p** → `dataset_size_sweep/` | **n/p** → same | n/a (no training) | n/a |
 
 "n/p" panels/cells are drawn automatically; nothing crashes when data is missing.
@@ -257,13 +258,21 @@ comparison is now organised as:
 | `sam3_yolobox` | YOLO11n's predicted boxes (+ YOLO class & score) | two-stage detector→SAM3; shows whether SAM3 refines YOLO's masks |
 | `sam3_gtbox` | GT boxes (the original run) | oracle upper bound |
 
-**Figure 3b** (`fig3b_sam3_prompt_ablation`) lists the three with YOLO alone as reference; `plot_config.MAIN_MODELS`
-picks which SAM3 enters Figs 1b/2/3/4 (`sam3_text` by default). The text-prompt design has one convention to
+**Figure 3b** (per-class AP for the three conditions + YOLO reference) and **Figure 3c** (one aggregate row each:
+mAP, P, R, IoU, Dice + "what it tests") hold the ablation; `plot_config.MAIN_MODELS` picks which SAM3 enters
+Figs 1b/2/3/4 (`sam3_text` by default).
+
+Result (2026-09-18, laptop run): text-prompted SAM3 is essentially blind to this vocabulary — mAP50 **0.028**;
+anatomy prompts return nothing usable, "suction tube" fires on every frame (2,547 instances), "base of tongue"
+9,102 low-score instances. YOLO-box→SAM3 (0.499) is *below* YOLO alone (0.543): given YOLO's box and class, SAM3's
+mask is on average no better than YOLO's own (IoU 0.809 vs 0.810) and worse for thin/diffuse classes (`cut`
+0.62 vs 0.78, `soft palate` 0.18 vs 0.56 — inside a soft-palate box SAM3 prefers a smaller salient object).
+GT-box SAM3 (0.970) remains the upper bound. Per-concept prediction counts: `data/computed/sam3_text_prompt_counts.csv`. The text-prompt design has one convention to
 know: the label space contains the same concept under two names from the two annotated videos (`bot`/`base of
 tongue`, `bipolar`/`maryland`; verified to be perfectly separated by source video), so each concept is prompted
 once and written with the class name of the frame's source vocabulary. The scripts `sam3_text_prompt.py` and
-`sam3_yolo_box_prompt.py` are built and run on the laptop (spec in `HANDOFF_FOR_CLAUDE.txt`); until they land,
-`sam3_text` / `sam3_yolobox` are n/p and the main figures show an empty SAM3 column.
+`sam3_yolo_box_prompt.py` were built and run on the laptop (spec + the laptop session's notes in
+`HANDOFF_FOR_CLAUDE.txt`; both move SAM3's outputs to CPU before post-processing to fit 6 GB).
 
 ## 6. Re-plotting / changing figures
 
