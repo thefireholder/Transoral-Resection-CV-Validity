@@ -1,7 +1,7 @@
 {
-  "model": "sam3",
+  "model": "sam3_gtbox",
   "split": "test",
-  "source": "/home/sangjoon/Desktop/school/cimed/vinay/result/data/predictions/sam3_test.json",
+  "source": "/home/sangjoon/Desktop/school/cimed/vinay/result/data/predictions/sam3_gtbox_test.json",
   "ap_method": "coco",
   "aggregate": {
     "mAP50": 0.9696968671675392,

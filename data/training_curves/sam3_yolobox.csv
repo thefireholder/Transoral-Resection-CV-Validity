@@ -1,0 +1,1 @@
+epoch,train_loss,val_loss,train_precision,train_recall,val_precision,val_recall,val_mAP50,val_mAP50_95

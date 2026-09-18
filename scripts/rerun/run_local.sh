@@ -6,7 +6,7 @@
 #
 #   bash scripts/rerun/run_local.sh              # sam3 -> maskrcnn -> yolo -> monai  (+ figures)
 #   bash scripts/rerun/run_local.sh --sweep      # ... then the dataset-size sweep (10 trainings, long)
-#   bash scripts/rerun/run_local.sh --only yolo  # one step: sam3 | maskrcnn | yolo | monai | sweep
+#   bash scripts/rerun/run_local.sh --only yolo  # one step: sam3 (=GT box) | maskrcnn | yolo | monai | sam3_text | sam3_yolobox | sweep
 #   bash scripts/rerun/run_local.sh --dry        # print the plan only
 #
 # Parallelism on a single GPU:
@@ -89,13 +89,13 @@ FAILED=(); BG=()
 
 say "=== run_local.sh  RESULT=$RESULT  TORS_SHARED=$TORS_SHARED  env=$CONDA_ENV  device=$DEVICE ==="
 python -c "import torch;print('torch',torch.__version__,'cuda',torch.cuda.is_available(), torch.cuda.get_device_name(0) if torch.cuda.is_available() else '')" | tee -a "$LOG/run_local.log"
-say "plan: [GPU serial] sam3 (~1-3 h) -> maskrcnn curves (~3-5 h @bs$MRCNN_BATCH) -> yolo curves (~3-5 h) -> monai (~2-4 h)$( [ $DO_SWEEP = 1 ] && echo ' -> sweep (10 trainings, ~1-2 days)')"
+say "plan: [GPU serial] sam3 GT-box (~1-3 h) -> maskrcnn curves (~3-5 h @bs$MRCNN_BATCH) -> yolo curves (~3-5 h) -> monai (~2-4 h) -> sam3_text (~1-2 h) -> sam3_yolobox (~1 h)$( [ $DO_SWEEP = 1 ] && echo ' -> sweep (10 trainings, ~1-2 days)')"
 say "      [CPU background] after each: compute_mask_metrics / collect_results / make_figures"
 
 # ---------------------------------------------------------------- 1. SAM3 (shortest, unlocks Fig 1b + 2)
 if want sam3; then
-  run_step sam3 python scripts/rerun/sam3_eval_save_predictions.py --device cuda $SAM3_ARGS \
-  && post sam3 bash -c "python scripts/compute_mask_metrics.py sam3 && python scripts/collect_results.py && python plot/make_figures.py 1b 2 3 4"
+  run_step sam3 python scripts/rerun/sam3/sam3_gt_box_prompt.py --device cuda $SAM3_ARGS \
+  && post sam3 bash -c "python scripts/compute_mask_metrics.py sam3_gtbox && python scripts/collect_results.py && python plot/make_figures.py 3b"
 fi
 
 # ---------------------------------------------------------------- 2. Mask R-CNN 12-epoch retrain (adopted as THE Mask R-CNN model)
@@ -119,7 +119,17 @@ if want monai; then
   && post monai bash -c "python scripts/compute_mask_metrics.py monai && python scripts/collect_results.py && python plot/make_figures.py"
 fi
 
-# ---------------------------------------------------------------- 5. optional dataset-size sweep (Figure 5)
+# ---------------------------------------------------------------- 5. SAM3 text-prompt (zero-shot) and YOLO-box prompt  (Fig 3b + main figures)
+if want sam3_text; then
+  run_step sam3_text python scripts/rerun/sam3/sam3_text_prompt.py --device cuda $SAM3_ARGS \
+  && post sam3_text bash -c "python scripts/compute_mask_metrics.py sam3_text && python scripts/collect_results.py && python plot/make_figures.py"
+fi
+if want sam3_yolobox; then
+  run_step sam3_yolobox python scripts/rerun/sam3/sam3_yolo_box_prompt.py --device cuda $SAM3_ARGS \
+  && post sam3_yolobox bash -c "python scripts/compute_mask_metrics.py sam3_yolobox && python scripts/collect_results.py && python plot/make_figures.py 3b"
+fi
+
+# ---------------------------------------------------------------- 6. optional dataset-size sweep (Figure 5)
 if want sweep && [ $DO_SWEEP = 1 -o "$ONLY" = sweep ]; then
   run_step sweep_subsets python scripts/rerun/dataset_size_sweep/make_subsets.py
   for n in 75 150 300 600 732; do        # small -> large so partial results are useful early

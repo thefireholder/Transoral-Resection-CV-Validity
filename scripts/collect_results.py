@@ -44,7 +44,7 @@ YOLO = SHARED / "train_script/yolov12_project/runs/segment/1200images"
 SAM = SHARED / "train_script/SAM2_project/sam2"
 
 NP = "n/p"
-MODELS = ["maskrcnn", "yolo", "sam3", "monai"]
+MODELS = ["maskrcnn", "yolo", "sam3_text", "sam3_yolobox", "sam3_gtbox", "monai"]
 SPLIT = "test"
 # The 14 classes that have GT instances in the test split, alphabetical.
 TEST_CLASSES = [
@@ -255,26 +255,44 @@ def yolo():
 
 
 # ---------------------------------------------------------------------------
-# SAM3 (zero-shot, GT-box prompted, no training)
+# SAM3 -- three prompting conditions (Fig 3b ablation). Only the GT-box one has
+# "reported" numbers (the original sam3_model.py run); the text-prompt and
+# YOLO-box variants exist only as source=recomputed (scripts/rerun/sam3/).
 # ---------------------------------------------------------------------------
-def sam3():
+def sam3_text():
+    src("sam3_text", "reported metrics", "-", "n/p by design: this condition (zero-shot, class-name text prompts, "
+        "scripts/rerun/sam3/sam3_text_prompt.py) was never evaluated by an original script; see source=recomputed.")
+    src("sam3_text", "training curve", "-", "n/p: zero-shot, not trained.")
+    write_curve("sam3_text", [])
+    return {c: {k: None for k in PER_CLASS_COLS} for c in TEST_CLASSES}, {k: None for k in AGG_COLS}
+
+
+def sam3_yolobox():
+    src("sam3_yolobox", "reported metrics", "-", "n/p by design: two-stage YOLO boxes -> SAM3 masks "
+        "(scripts/rerun/sam3/sam3_yolo_box_prompt.py); see source=recomputed.")
+    src("sam3_yolobox", "training curve", "-", "n/p: SAM3 is not trained; the boxes come from the YOLO run.")
+    write_curve("sam3_yolobox", [])
+    return {c: {k: None for k in PER_CLASS_COLS} for c in TEST_CLASSES}, {k: None for k in AGG_COLS}
+
+
+def sam3_gtbox():
     apj = SAM / "result/sam3/1200images/per_class_ap.json"
     log = SAM / "logs/sam3_eval_9794464.out"
     if not (apj.exists() and log.exists()):   # deleted 2026-09-17 -> gathered copies
         apj, log = GATHERED / "sam3-1200/per_class_ap.json", GATHERED / "sam3-1200/result.txt"
     if not (apj.exists() and log.exists()):
-        return _missing("sam3", [apj, log])
-    src("sam3", "per-class AP50, AP50:95 (test)", apj,
+        return _missing("sam3_gtbox", [apj, log])
+    src("sam3_gtbox", "per-class AP50, AP50:95 (test)", apj,
         "sam3_model.py, ultralytics-style ap_per_class with every prediction conf=1.0 "
         "(one mask per GT box prompt, pad 5%). Same file as gathered sam3-1200/per_class_ap.json.")
-    src("sam3", "per-class + mean IoU / Dice (test)", log,
+    src("sam3_gtbox", "per-class + mean IoU / Dice (test)", log,
         "'Per-class IoU / Dice' block; mean over ALL 983 GT instances (not just matched). "
         "Same as gathered sam3-1200/result.txt.")
-    src("sam3", "precision / recall, training curve", "-",
+    src("sam3_gtbox", "precision / recall, training curve", "-",
         "n/p: not a trained model; and with conf=1.0 for every prediction P/R collapse to a "
         "single point (precision = fraction of prompts with IoU>=0.5).")
-    src("sam3", "PR curve numbers", "-", "n/p: only PR_curve.png was saved. Rerun "
-        "scripts/rerun/sam3_eval_save_predictions.py to get the uniform prediction file.")
+    src("sam3_gtbox", "PR curve numbers", "-", "n/p from the original run (only PR_curve.png was saved); "
+        "scripts/rerun/sam3/sam3_gt_box_prompt.py regenerates them -> source=recomputed.")
     ap = json.load(open(apj))
     text = open(log, errors="replace").read()
     per = {}
@@ -288,7 +306,7 @@ def sam3():
            "precision": None, "recall": None,
            "iou": float(re.search(r"Mean IoU: ([\d.]+)", text).group(1)),
            "dice": float(re.search(r"Mean Dice: ([\d.]+)", text).group(1))}
-    write_curve("sam3", [])
+    write_curve("sam3_gtbox", [])
     return per, agg
 
 
@@ -365,7 +383,8 @@ def write_curve(model, rows):
 
 def main():
     per_rows, agg_rows = [], []
-    for model, fn in [("maskrcnn", maskrcnn), ("yolo", yolo), ("sam3", sam3), ("monai", monai)]:
+    for model, fn in [("maskrcnn", maskrcnn), ("yolo", yolo), ("sam3_text", sam3_text),
+                      ("sam3_yolobox", sam3_yolobox), ("sam3_gtbox", sam3_gtbox), ("monai", monai)]:
         per, agg = fn()
         for cls in TEST_CLASSES:
             per_rows.append([model, SPLIT, "reported", cls] + [fmt(per[cls][k]) for k in PER_CLASS_COLS])

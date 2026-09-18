@@ -55,18 +55,19 @@ def _other(source):
     return "recomputed" if source == "reported" else "reported"
 
 
-def per_class_table(source=None):
+def per_class_table(source=None, models=None):
     """{model: {class: {metric: float|nan}}} for SPLIT / METRIC_SOURCE.
     Also returns a set of (model, class, metric) that were filled from the other source."""
     source = source or C.METRIC_SOURCE
-    tabs = {s: {m: {} for m in C.MODELS} for s in ("reported", "recomputed")}
+    models = list(models or C.MODELS)
+    tabs = {s: {m: {} for m in models} for s in ("reported", "recomputed")}
     for r in read_csv(C.DATA / "metrics_per_class.csv"):
-        if r["model"] in C.MODELS and r["split"] == C.SPLIT:
+        if r["model"] in models and r["split"] == C.SPLIT:
             tabs[r["source"]][r["model"]][r["class"]] = {k: _num(v) for k, v in r.items()
                                                          if k not in ("model", "split", "source", "class")}
     out, filled = tabs[source], set()
     if C.FILL_FROM_OTHER_SOURCE:
-        for m in C.MODELS:
+        for m in models:
             for cls, vals in tabs[_other(source)][m].items():
                 out[m].setdefault(cls, {})
                 for k, v in vals.items():
@@ -75,11 +76,12 @@ def per_class_table(source=None):
     return out, filled
 
 
-def aggregate_table(source=None):
+def aggregate_table(source=None, models=None):
     source = source or C.METRIC_SOURCE
+    models = list(models or C.MODELS)
     tabs = {s: {} for s in ("reported", "recomputed")}
     for r in read_csv(C.DATA / "metrics_aggregate.csv"):
-        if r["model"] in C.MODELS and r["split"] == C.SPLIT:
+        if r["model"] in models and r["split"] == C.SPLIT:
             tabs[r["source"]][r["model"]] = {k: _num(v) for k, v in r.items() if k not in ("model", "split", "source")}
     out, filled = tabs[source], set()
     if C.FILL_FROM_OTHER_SOURCE:
@@ -368,6 +370,46 @@ def fig3():
 
 
 # ---------------------------------------------------------------------------
+# Figure 3b  SAM3 prompting ablation (aggregate metrics per prompt condition)
+# ---------------------------------------------------------------------------
+def fig3b():
+    rows_keys = list(C.FIG3B_ROWS) + list(C.FIG3B_REFERENCE)
+    agg, filled = aggregate_table(models=rows_keys)
+    header = ["SAM3 prompt condition"] + [lab for _, lab in C.FIG3B_METRICS] + ["what it tests"]
+    text = []
+    for k in rows_keys:
+        vals = []
+        for m, _ in C.FIG3B_METRICS:
+            v = agg.get(k, {}).get(m, np.nan)
+            vals.append(C.NP_TEXT if np.isnan(v) else f"{v:.3f}" + ("*" if (k, m) in filled else ""))
+        text.append([C.ALL_MODELS[k]["label"]] + vals + [C.FIG3B_NOTES.get(k, "")])
+    ncol = len(header)
+    widths = [0.16] + [0.08] * len(C.FIG3B_METRICS) + [0.36]
+    fig, ax = plt.subplots(figsize=(14, 0.45 * (len(text) + 2)))
+    ax.axis("off")
+    tab = ax.table(cellText=text, colLabels=header, colWidths=widths, loc="center", cellLoc="center")
+    tab.auto_set_font_size(False); tab.set_fontsize(7.5); tab.scale(1, 1.5)
+    for (r, c), cell in tab.get_celld().items():
+        cell.set_edgecolor("0.8")
+        if r == 0:
+            cell.set_text_props(weight="bold"); cell.set_facecolor("0.93")
+        if c in (0, ncol - 1):
+            cell.set_text_props(ha="left"); cell.PAD = 0.02
+        if r == len(C.FIG3B_ROWS) + 1 and C.FIG3B_REFERENCE:      # rule above the reference rows
+            cell.visible_edges = "TBLR"; cell.set_linewidth(1.2)
+    ax.set_title(f"SAM3 prompting ablation, {C.SPLIT} split  (source: {C.METRIC_SOURCE}; "
+                 f"P/R at the F1-max confidence, IoU/Dice over matched instances)", fontsize=9)
+    save(fig, "fig3b_sam3_prompt_ablation")
+    stem = C.FIG_DIR / "fig3b_sam3_prompt_ablation"
+    with open(stem.with_suffix(".csv"), "w", newline="") as f:
+        w = csv.writer(f); w.writerow(header); w.writerows(text)
+    with open(stem.with_suffix(".md"), "w") as f:
+        f.write("| " + " | ".join(header) + " |\n|" + "---|" * ncol + "\n")
+        for r in text:
+            f.write("| " + " | ".join(r) + " |\n")
+
+
+# ---------------------------------------------------------------------------
 # Figure 4  aggregate bar chart
 # ---------------------------------------------------------------------------
 def fig4():
@@ -428,13 +470,13 @@ def fig5():
     save(fig, "fig5_dataset_size")
 
 
-FIGS = {"1a": fig1a, "1b": fig1b, "2": fig2, "3": fig3, "4": fig4, "5": fig5}
+FIGS = {"1a": fig1a, "1b": fig1b, "2": fig2, "3": fig3, "3b": fig3b, "4": fig4, "5": fig5}
 
 
 if __name__ == "__main__":
     want = sys.argv[1:] or list(FIGS)
     for k in want:
         for key, fn in FIGS.items():
-            if key == k or key.startswith(k):
+            if key == k or (k not in FIGS and key.startswith(k)):
                 print(f"Figure {key}")
                 fn()

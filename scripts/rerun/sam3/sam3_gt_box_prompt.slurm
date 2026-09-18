@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=sam3_save
+#SBATCH --job-name=sam3_gtbox
 #SBATCH --account=gayed-ic
 #SBATCH --partition=IllinoisComputes-GPU
 #SBATCH --gpus-per-node=1
@@ -18,7 +18,7 @@ export HF_HUB_OFFLINE=1
 cd /u/sl257/shared_data/result
 mkdir -p scripts/rerun/logs
 nvidia-smi -L
-python scripts/rerun/sam3_eval_save_predictions.py
-python scripts/compute_mask_metrics.py sam3
+python scripts/rerun/sam3/sam3_gt_box_prompt.py
+python scripts/compute_mask_metrics.py sam3_gtbox
 python scripts/collect_results.py
 python plot/make_figures.py

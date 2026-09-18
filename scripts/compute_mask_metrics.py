@@ -21,7 +21,8 @@ Usage (from result/):
   conda activate pytorch_env
   python scripts/compute_mask_metrics.py maskrcnn
   python scripts/compute_mask_metrics.py yolo
-  python scripts/compute_mask_metrics.py sam3          # after scripts/rerun/sam3_eval_save_predictions.py
+  python scripts/compute_mask_metrics.py sam3_gtbox    # after scripts/rerun/sam3/sam3_gt_box_prompt.py
+  python scripts/compute_mask_metrics.py sam3_text sam3_yolobox
   python scripts/compute_mask_metrics.py --all
 """
 import argparse
@@ -31,7 +32,7 @@ from pathlib import Path
 from seglib import evaluate_predictions, load_coco_gt, load_predictions, save_pr_curves
 
 RESULT = Path(__file__).resolve().parents[1]
-MODELS = ["maskrcnn", "yolo", "sam3", "monai"]
+MODELS = ["maskrcnn", "yolo", "sam3_text", "sam3_yolobox", "sam3_gtbox", "monai"]
 
 
 def run(model: str, split: str, ap_method: str):

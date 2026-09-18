@@ -1,6 +1,7 @@
 # result/ — unified numbers + figures for the 4-model tonsillectomy segmentation comparison
 
-Models: **Mask R-CNN**, **YOLO11n-seg**, **SAM3** (zero-shot, GT-box prompted), **MONAI UNet** (semantic; code + old checkpoint in `train_script/monai-project`, retrained here on the COCO-derived masks — see §5c).
+Models: **Mask R-CNN**, **YOLO11n-seg**, **SAM3** (zero-shot; **text-prompted** in the main figures, box-prompted variants in the Fig 3b ablation — see §5e), **MONAI UNet** (semantic; retrained here on the COCO-derived masks — see §5c).
+The folder is a git repo: `github.com/thefireholder/Transoral-Resection-CV-Validity` (checkpoints / masks / image dumps are git-ignored).
 Dataset "1200images" = 1048 frames (train 732 / val 157 / test 158), 21-class vocabulary, 14 classes present in the test split.
 **All metrics are mask metrics** (never bounding box). All tables/figures use the **test** split unless stated.
 
@@ -23,7 +24,7 @@ python scripts/compute_mask_metrics.py --all  # one scoring code for all models 
 python plot/make_figures.py                   # all figures                    -> figures/
 
 # NOT run (need a GPU) — fill the n/p gaps. Cluster version (the 3 jobs are independent -> run in parallel):
-sbatch scripts/rerun/sam3_eval_save_predictions.slurm    # ~1 h  : SAM3 masks+scores -> Fig 1b overlay, Fig 2 PR curve
+sbatch scripts/rerun/sam3/sam3_gt_box_prompt.slurm       # ~1 h  : SAM3 GT-box masks+scores (needs the HF cache re-downloaded on the cluster)
 sbatch scripts/rerun/maskrcnn_train_curves.sbatch        # ~4 h  : 12-epoch retrain, per-epoch train/val P,R -> Fig 1a; becomes THE Mask R-CNN model (--adopt)
 sbatch scripts/rerun/yolo_train_curves.slurm             # ~3 h  : per-epoch train/val P,R -> Fig 1a
 sbatch scripts/rerun/monai/monai_train_curves.slurm      # ~3 h  : UNet retrain on COCO-derived masks (§5c) -> all MONAI n/p
@@ -72,7 +73,7 @@ result/
 │       ├── run_local.sh                 NO-SLURM runner: serial GPU steps + background CPU post-processing, resumable
 │       ├── maskrcnn_train_curves.*      retrain 12 ep (LR x0.1 @8,11; seed 42) logging train+val mask P/R every epoch; --adopt
 │       ├── yolo_train_curves.*          retrain (seed 0) with save_period=1, then eval every epoch ckpt on train+val
-│       ├── sam3_eval_save_predictions.* rerun SAM3 eval saving masks + scores
+│       ├── sam3/                        sam3_gt_box_prompt.* (oracle), sam3_text_prompt.py + sam3_yolo_box_prompt.py (built on the laptop, see HANDOFF), prompts.json
 │       ├── monai/                       prepare_masks.py (COCO polygons -> semantic PNGs, done), monai_train_curves.py + .slurm, data/
 │       └── dataset_size_sweep/          make_subsets.py, yolo_sweep.py, maskrcnn_sweep.py, collect_sweep.py, sweep.slurm
 │
@@ -80,7 +81,8 @@ result/
 │   ├── plot_config.py            EVERY knob: model list/order/colours/labels, class order, metric source, layouts, fonts, dpi
 │   └── make_figures.py           fig1a fig1b fig2 fig3 fig4 fig5 — each an independent function reading only data/
 └── figures/                      fig1a_training_curves, fig1b_qualitative, fig2_pr_curves_{per_model,per_class},
-                                  fig3_map_table (+ .csv/.md/.tex), fig4_aggregate_bars, fig5_dataset_size   (.png + .pdf)
+                                  fig3_map_table (+ .csv/.md/.tex), fig3b_sam3_prompt_ablation (+ .csv/.md),
+                                  fig4_aggregate_bars, fig5_dataset_size   (.png + .pdf)
 ```
 
 ---
@@ -115,10 +117,10 @@ for the gated `facebook/sam3`. `run_local.sh` defaults to Mask R-CNN batch 2 / l
 | **1a** training curve: loss | train ✔ val ✔ (12-epoch rerun) | train ✔ val ✔ (60 epochs) | — (not trained) | train ✔ val ✔ (98 epochs, §5c) |
 | **1a** training curve: train-split P/R | ✔ (12-ep rerun) | ✔ (rerun) | — | ✔ (retrain, §5c) |
 | **1a** training curve: val-split P/R | ✔ | ✔ | — | ✔ |
-| **1b** overlay pred vs GT | ✔ | ✔ | ✔ (rerun) | ✔ (retrain) |
-| **2** mask PR curve per class | ✔ (original curves were **box**-based; these are mask) | ✔ | ✔ (rerun) | ✔ (retrain) |
-| **3** mAP table per class + aggregate | ✔ | ✔ | ✔ | ✔ (all 14 classes after retrain) |
-| **4** mAP / Dice / IoU bars | ✔ | ✔ | ✔ | ✔ (all `recomputed`, same definition) |
+| **1b** overlay pred vs GT | ✔ | ✔ | text-prompt: **n/p** until the laptop run (§5e); GT-box ✔ | ✔ (retrain) |
+| **2** mask PR curve per class | ✔ (original curves were **box**-based; these are mask) | ✔ | text-prompt **n/p** (§5e); GT-box ✔ | ✔ (retrain) |
+| **3** mAP table per class + aggregate | ✔ | ✔ | text-prompt **n/p**; Fig 3b has GT-box | ✔ (all 14 classes after retrain) |
+| **4** mAP / Dice / IoU bars | ✔ | ✔ | text-prompt **n/p** | ✔ (all `recomputed`, same definition) |
 | **5** dataset-size sweep | **n/p** → `dataset_size_sweep/` | **n/p** → same | n/a (no training) | n/a |
 
 "n/p" panels/cells are drawn automatically; nothing crashes when data is missing.
@@ -188,7 +190,7 @@ All three GPU jobs ran on the laptop (Quadro RTX 3000, 6 GB; `run_local.sh`) and
 (`data/predictions/{sam3,maskrcnn,yolo_rerun}_test.json`, `data/training_curves/{maskrcnn,yolo}_rerun.csv`,
 `data/computed/`, `data/pr_curves/`, `scripts/rerun/logs/local/`) plus `scripts/rerun/output/` (1.5 GB: Mask R-CNN `best.pth`, YOLO `best.pt`/`last.pt`/all 60 `epochN.pt`, ultralytics `results.csv` and plots).
 
-* **SAM3** — 983 instances, mean IoU 0.7978 / Dice 0.8695 = the original run (0.7974 / 0.8692) ✔.
+* **SAM3 (GT-box, now key `sam3_gtbox`)** — 983 instances, mean IoU 0.7978 / Dice 0.8695 = the original run (0.7974 / 0.8692) ✔.
   Note the `recomputed` SAM3 IoU/Dice (0.831 / 0.904) are higher than `reported` because `seglib` averages over
   *matched* instances (IoU ≥ 0.5) like Mask R-CNN/YOLO, whereas the original SAM3 script averaged over *all* GT
   instances. Both are in `metrics_aggregate.csv`; say which one you quote.
@@ -242,6 +244,26 @@ gathered folder, verified identical). `collect_results.py` now falls back to the
 checkpoint, MONAI `unified_best.pth`/`jml619_best.pth` and the rest of that project, secondary YOLO/SAM runs).
 Paths under `train_script/` quoted in `data/SOURCES.md` and elsewhere in this README are historical.
 A backup of `result/` is at `/u/sl257/backups/result_2026-09-17.tgz` (home filesystem, separate from Lustre).
+
+## 5e. SAM3: three prompting conditions (2026-09-17)
+
+The original SAM3 evaluation prompted it with the **ground-truth box of every instance**, so it never had to
+detect or classify anything — its 0.97 mAP50 is an upper bound on mask quality, not a competitor's score. The
+comparison is now organised as:
+
+| key | prompt | role |
+|---|---|---|
+| `sam3_text` | class-name text (`scripts/rerun/sam3/prompts.json`), zero-shot | **the SAM3 in the main figures** (self-contained, same task as the other three) |
+| `sam3_yolobox` | YOLO11n's predicted boxes (+ YOLO class & score) | two-stage detector→SAM3; shows whether SAM3 refines YOLO's masks |
+| `sam3_gtbox` | GT boxes (the original run) | oracle upper bound |
+
+**Figure 3b** (`fig3b_sam3_prompt_ablation`) lists the three with YOLO alone as reference; `plot_config.MAIN_MODELS`
+picks which SAM3 enters Figs 1b/2/3/4 (`sam3_text` by default). The text-prompt design has one convention to
+know: the label space contains the same concept under two names from the two annotated videos (`bot`/`base of
+tongue`, `bipolar`/`maryland`; verified to be perfectly separated by source video), so each concept is prompted
+once and written with the class name of the frame's source vocabulary. The scripts `sam3_text_prompt.py` and
+`sam3_yolo_box_prompt.py` are built and run on the laptop (spec in `HANDOFF_FOR_CLAUDE.txt`); until they land,
+`sam3_text` / `sam3_yolobox` are n/p and the main figures show an empty SAM3 column.
 
 ## 6. Re-plotting / changing figures
 

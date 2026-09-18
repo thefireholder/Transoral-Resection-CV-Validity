@@ -1,0 +1,29 @@
+{
+  "_readme": [
+    "Text prompts for sam3_text_prompt.py. One entry per CONCEPT; each concept is prompted once per image.",
+    "The dataset's label space has two vocabularies from two annotated videos (see README §5c / HANDOFF):",
+    "  JSR frames (file names starting 0-199-images__, 201-400-image__, 10000-10200-image__) use bot, bipolar, cut, endotracheal tube",
+    "  JML frames (JML619-images__) use base of tongue, maryland, medial pterygoid muscle, parapharyngeal fat, ...",
+    "so a detected concept is written with the class NAME of the frame's source vocabulary ('class' below);",
+    "null = that concept is never annotated in that source, so it is not prompted there.",
+    "'prompt' is the free text given to SAM3 -- edit these to try better phrasings; keep 'class' as is.",
+    "Verified on the COCO train/val/test splits 2026-09-17: every class occurs only in the sources listed here."
+  ],
+  "source_of_frame": {"JML619-images": "JML", "0-199-images": "JSR", "201-400-image": "JSR", "10000-10200-image": "JSR"},
+  "concepts": [
+    {"prompt": "base of tongue",                    "class": {"JSR": "bot",                "JML": "base of tongue"}},
+    {"prompt": "bipolar forceps",                   "class": {"JSR": "bipolar",            "JML": "maryland"}},
+    {"prompt": "monopolar cautery",                 "class": {"JSR": "monopolar",          "JML": "monopolar"}},
+    {"prompt": "suction tube",                      "class": {"JSR": "suction",            "JML": "suction"}},
+    {"prompt": "soft palate",                       "class": {"JSR": "soft palate",        "JML": "soft palate"}},
+    {"prompt": "surgical incision",                 "class": {"JSR": "cut",                "JML": null}},
+    {"prompt": "endotracheal tube",                 "class": {"JSR": "endotracheal tube",  "JML": null}},
+    {"prompt": "ligasure vessel sealer",            "class": {"JSR": "ligasure",           "JML": "ligasure"}},
+    {"prompt": "medial pterygoid muscle",           "class": {"JSR": null,                 "JML": "medial pterygoid muscle"}},
+    {"prompt": "parapharyngeal fat",                "class": {"JSR": null,                 "JML": "parapharyngeal fat"}},
+    {"prompt": "posterior pharyngeal wall",         "class": {"JSR": null,                 "JML": "posterior pharyngeal wall"}},
+    {"prompt": "prevertebral fascia",               "class": {"JSR": null,                 "JML": "prevertebral fascia"}},
+    {"prompt": "uvula",                             "class": {"JSR": null,                 "JML": "uvula"}},
+    {"prompt": "superior constrictor muscle",       "class": {"JSR": null,                 "JML": "superior constrictor muscle"}}
+  ]
+}

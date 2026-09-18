@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 """
-Re-run the SAM3 zero-shot evaluation of scripts/original/sam/sam3_model.py
-(GT bounding box prompt, padded 5%, one mask per GT instance, test split) and
-save what the original run threw away:
+SAM3, GT-BOX PROMPT ("oracle" condition of the SAM3 prompting ablation, Fig 3b).
+Re-runs the evaluation of scripts/original/sam/sam3_model.py (GT bounding box
+prompt, padded 5%, one mask per GT instance, test split) and saves what the
+original run threw away:
 
-  data/predictions/sam3_test.json      uniform prediction file (masks + SAM3 mask score)
-                                       -> enables Figure 1b overlays and Figure 2 PR curves
-                                          via  scripts/compute_mask_metrics.py sam3
-  data/computed/sam3_instances_test.csv   per-instance IoU / Dice / score
+  data/predictions/sam3_gtbox_test.json      uniform prediction file (masks + SAM3 mask score)
+                                             -> scripts/compute_mask_metrics.py sam3_gtbox
+  data/computed/sam3_gtbox_instances_test.csv   per-instance IoU / Dice / score
+
+Sibling scripts in this folder: sam3_text_prompt.py (zero-shot, the SAM3 used in
+the main figures) and sam3_yolo_box_prompt.py (two-stage YOLO boxes -> SAM3).
 
 Self-contained: needs only transformers (Sam3Model/Sam3Processor), torch,
 pycocotools, numpy, PIL, cv2 -- NOT the sam2 package. The helper functions
@@ -25,7 +28,7 @@ use --fp16 if it does not fit).
 Weights: facebook/sam3 (gated on HuggingFace). On the cluster they are cached
 in HF_HOME=/u/sl257/scratch/huggingface; elsewhere log in once with
 `huggingface-cli login` and let it download.
-Submit with:  sbatch scripts/rerun/sam3_eval_save_predictions.slurm
+Submit with:  sbatch scripts/rerun/sam3/sam3_gt_box_prompt.slurm
 """
 import argparse
 import csv
@@ -39,8 +42,8 @@ import torch
 from PIL import Image
 
 HERE = Path(__file__).resolve().parent
-RESULT = HERE.parents[1]
-sys.path.insert(0, str(HERE.parents[0]))                          # scripts/  (seglib)
+RESULT = HERE.parents[2]
+sys.path.insert(0, str(RESULT / "scripts"))                       # seglib
 from seglib import COCO_1200, coco_ann_to_rle, rle_decode, rle_encode, save_predictions  # noqa: E402
 
 
@@ -147,9 +150,9 @@ def main():
     for info in coco.loadImgs(coco.getImgIds()):          # background frames need an (empty) entry too
         per_image.setdefault(info["file_name"], {"file_name": info["file_name"], "height": info["height"],
                                                  "width": info["width"], "predictions": []})
-    out = RESULT / "data" / "predictions" / f"sam3_{args.split}.json"
-    save_predictions(out, "sam3", args.split, 0.0, list(per_image.values()))
-    inst_path = RESULT / "data" / "computed" / f"sam3_instances_{args.split}.csv"
+    out = RESULT / "data" / "predictions" / f"sam3_gtbox_{args.split}.json"
+    save_predictions(out, "sam3_gtbox", args.split, 0.0, list(per_image.values()))
+    inst_path = RESULT / "data" / "computed" / f"sam3_gtbox_instances_{args.split}.csv"
     inst_path.parent.mkdir(parents=True, exist_ok=True)
     with open(inst_path, "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=list(inst_rows[0])); w.writeheader(); w.writerows(inst_rows)

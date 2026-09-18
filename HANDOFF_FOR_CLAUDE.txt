@@ -20,6 +20,83 @@ cluster session, so the "n/p" gaps in figures/ get filled:
 Everything is driven by ONE script:  scripts/rerun/run_local.sh   (serial GPU, resumable, background CPU post-processing).
 Do not rewrite the pipeline; fix only what blocks it and note every change at the bottom of this file.
 
+=====================================================================================================================
+TASK (2026-09-17, after the MONAI step): BUILD + RUN TWO SAM3 SCRIPTS, then commit + push
+=====================================================================================================================
+Context: the SAM3 row in the main comparison used GROUND-TRUTH boxes as prompts, which makes its 0.97 mAP an
+oracle upper bound, not a comparable result. Decision: the main figures use a zero-shot TEXT-prompted SAM3, and
+a separate table (Figure 3b, already wired: plot/make_figures.py fig3b) shows the SAM3 prompting ablation:
+text prompt / YOLO-box prompt / GT-box prompt, with YOLO alone as reference. The cluster cannot run SAM3 (no
+weights there any more, no GPU in the session), so YOU build and run these two scripts on the laptop. The
+GT-box script scripts/rerun/sam3/sam3_gt_box_prompt.py is the working template: same model loading, same
+post-processing, same output format. Copy its structure. Keep both scripts STANDALONE: import only
+transformers / torch / numpy / cv2 / PIL / pycocotools and scripts/seglib.py (never scripts/original/).
+
+The repo is a git clone now: `git pull` first (this HANDOFF, plot/, collector, run_local.sh and the renamed
+sam3_gtbox files all changed). Then build, run, verify, `git add` + commit + push (see the end).
+
+------------------------------------------------------------------ A. scripts/rerun/sam3/sam3_text_prompt.py
+Zero-shot: for every test image, for every concept in scripts/rerun/sam3/prompts.json (14 concepts), run SAM3
+with the concept's text as the prompt; every returned instance becomes a prediction with
+  class = concepts[i]["class"][source_of_frame]   (skip the concept when that is null for the frame's source;
+                                                    source = prompts.json "source_of_frame" keyed by the part of
+                                                    the file name before "__")
+  score = SAM3's score for that instance
+  rle   = the instance mask at the ORIGINAL image resolution (1920x1080), via seglib.rle_encode
+Write  data/predictions/sam3_text_test.json  with seglib.save_predictions(path, "sam3_text", "test",
+score_threshold, images) -- the uniform format (see seglib.py docstring). EVERY test image must have an
+entry (158 entries), including the 33 background frames with no GT (empty "predictions" list).
+
+API (transformers >= 5, verified against the installed source):
+  inputs  = processor(images=pil_img, text="bipolar forceps", return_tensors="pt").to(device)
+  outputs = model(**inputs)
+  res = processor.post_process_instance_segmentation(outputs, threshold=SCORE_THRESH, mask_threshold=0.5,
+                                                     target_sizes=inputs["original_sizes"].tolist())[0]
+  -> res["masks"] (N,H,W), res["scores"] (N,), res["boxes"]  -- same as the GT-box script uses.
+  Use SCORE_THRESH = 0.05 (CLI --score-thresh) so PR curves are not truncated; per-class F1-max P/R and AP
+  are computed later by scripts/compute_mask_metrics.py, which handles thresholds.
+  SPEED: Sam3Model.forward(pixel_values=None, vision_embeds=..., input_ids=..., attention_mask=...) accepts a
+  precomputed vision encoding. Encode each image ONCE (model.get_vision_features / the vision encoder --
+  find the accessor in modeling_sam3.py; if this is fiddly, skip it: 14 prompts x 158 images = 2.2k plain
+  forward passes is still only ~1-2 h on the 6 GB GPU, and correctness matters more than speed).
+  Run ONE prompt per forward pass (no prompt batching -- VRAM). --fp16 as in the GT-box script.
+CLI: --split test --score-thresh 0.05 --device cuda --fp16 --prompts scripts/rerun/sam3/prompts.json
+     --max-images N (debug). Print progress every 10 images and a final per-class prediction count.
+Also write data/computed/sam3_text_prompt_counts.csv  (class, n_predictions, n_images_with_prediction) so we
+can see which concepts SAM3 responds to at all.
+
+------------------------------------------------------------------ B. scripts/rerun/sam3/sam3_yolo_box_prompt.py
+Two-stage: YOLO11n's predicted instances -> boxes -> SAM3 box prompts. Read data/predictions/yolo_test.json
+(the ORIGINAL cluster YOLO model; not yolo_rerun_test.json). For each image, for each YOLO prediction with
+score >= 0.05 (all of them): box = pycocotools mask.toBbox(pred["rle"]) -> [x, y, w, h] -> xyxy, padded 5%
+like the GT-box script (pad_box_xyxy), prompt SAM3 with that box (input_boxes=[[box]], input_boxes_labels=
+[[1]]) exactly like sam3_gt_box_prompt.py, keep the highest-scoring returned mask, and write a prediction with
+  class = the YOLO prediction's class,  score = the YOLO prediction's score (NOT SAM3's; the ranking must stay
+  YOLO's so the two rows are comparable),  rle = SAM3's mask at full resolution.
+If SAM3 returns no mask for a box, keep the YOLO mask unchanged and count it (print the count at the end).
+Write data/predictions/sam3_yolobox_test.json with model name "sam3_yolobox", score_threshold 0.05, all 158
+images. ~1,936 boxes total -> ~1 h.
+
+------------------------------------------------------------------ C. run, verify, commit
+  bash scripts/rerun/run_local.sh --only sam3_text        # calls the script + compute_mask_metrics + collect + figures
+  bash scripts/rerun/run_local.sh --only sam3_yolobox
+  (or run the scripts directly, then: python scripts/compute_mask_metrics.py sam3_text sam3_yolobox &&
+   python scripts/collect_results.py && python plot/make_figures.py)
+Checks before committing:
+  python -c "import json;d=json.load(open('data/predictions/sam3_text_test.json'));print(d['model'],len(d['images']))"  -> sam3_text 158
+  same for sam3_yolobox (-> sam3_yolobox 158)
+  data/metrics_aggregate.csv has rows  sam3_text,test,recomputed  and  sam3_yolobox,test,recomputed  with numbers
+  figures/fig3b_sam3_prompt_ablation.png: three SAM3 rows filled. Expected ballpark: text-prompt mAP50 well
+  below the trained models (anatomy prompts will mostly fail; instruments may work); YOLO-box row close to the
+  YOLO reference row (IoU/Dice slightly different, mAP similar since ranking + classes are YOLO's).
+  figures/fig1b_qualitative.png + fig2: the SAM3 column/panel now shows the TEXT-prompt model.
+Commit (scripts + prompts.json + data/predictions/sam3_{text,yolobox}_test.json + data/computed/* +
+data/pr_curves/* + data/metrics_*.csv + data/SOURCES.md + figures/ + scripts/rerun/logs/local/*):
+  git add -A && git commit -m "SAM3 text-prompt and YOLO-box-prompt variants + results" && git push
+Append what you changed/decided under "CHANGES MADE ON THIS MACHINE" below (prompt phrasings tried, any API
+workaround, timings). If Sam3Processor rejects text= or the outputs are empty for every prompt, stop and
+write that down instead of guessing.
+
 WHAT THE USER HAS TO PROVIDE ON THIS MACHINE (check before running)
 --------------------------------------------------------------------
 A. Data. processed_data/ is ALREADY on this laptop (copied earlier from the cluster's /u/sl257/shared_data/).
@@ -50,27 +127,8 @@ C. HuggingFace access to the gated model facebook/sam3:  `huggingface-cli login`
    Do NOT set HF_HUB_OFFLINE=1 here (that is only for the cluster's pre-cached copy).
 D. yolo11n-seg.pt (pretrained) is auto-downloaded by ultralytics; needs internet on first use.
 
-FILES TO COPY FROM THE CLUSTER FOR THE MONAI STEP (2026-09-17)  -- everything else on the laptop is already current
---------------------------------------------------------------------------------------------------------------------
-Copy these into the laptop's result/ at the same relative paths, overwriting:
-  HANDOFF_FOR_CLAUDE.txt                          (this file)
-  README.md
-  scripts/rerun/run_local.sh                      (new step 4 "monai"; --only monai)
-  scripts/rerun/monai/                            (whole folder, NEW: prepare_masks.py, monai_train_curves.py,
-                                                   monai_train_curves.slurm, data/classes.json, data/split.json;
-                                                   data/masks/ can be skipped -- run_local regenerates it in 7 s)
-  scripts/original/monai/                         (whole folder, NEW: the MONAI project's src/ + 4 reference scripts;
-                                                   monai_train_curves.py imports src/ from here)
-  scripts/original/README.md
-  scripts/collect_results.py                      (MONAI "superseded" handling)
-  plot/plot_config.py                             (FIG1A_MODELS now includes monai)
-  scripts/rerun/yolo_train_curves.py              (bug fix: epochN.pt is 0-indexed; only matters if YOLO is ever rerun)
-  data/training_curves/yolo_rerun.csv             (REPAIRED copy -- the laptop's own file has P/R shifted by one epoch
-                                                   and no epoch-60 losses; overwrite it)
-Do NOT copy back from the cluster: data/predictions/*, data/computed/*, data/pr_curves/*, data/metrics_*.csv,
-data/SOURCES.md, figures/ -- the laptop already has equal or newer versions, and collect_results.py /
-make_figures.py regenerate the derived ones anyway.
-Total: ~30 files, < 1 MB.
+FILES TO COPY: none -- result/ is a git repo now (github.com/thefireholder/Transoral-Resection-CV-Validity).
+`git pull` brings code + numbers; checkpoints/masks are git-ignored (see .gitignore) and stay per machine.
 
 HOW TO RUN
 ----------
