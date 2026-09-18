@@ -1,6 +1,6 @@
-| SAM3 prompt condition | mAP@0.5 | mAP@0.5:0.95 | P | R | IoU | Dice | what it tests |
-|---|---|---|---|---|---|---|---|
-| SAM3 (text prompt, zero-shot) | 0.028 | 0.020 | 0.081 | 0.141 | 0.840 | 0.909 | class-name text prompts: detect + classify + segment, zero-shot |
-| SAM3 (YOLO boxes) | 0.499 | 0.345 | 0.655 | 0.500 | 0.809 | 0.887 | YOLO11n boxes (+class, +score) as prompts: SAM3 only draws the mask |
-| SAM3 (GT boxes, oracle) | 0.970 | 0.669 | 0.977 | 0.977 | 0.831 | 0.904 | GT boxes as prompts: perfect localisation + class = upper bound |
-| YOLO11n-seg | 0.543 | 0.379 | 0.696 | 0.527 | 0.810 | 0.889 | reference: the detector whose boxes feed the row above |
+| SAM3 prompt condition | mAP@0.5 | mAP@0.5:0.95 | P | R | IoU | Dice |
+|---|---|---|---|---|---|---|
+| SAM3 (YOLO boxes) | 0.499 | 0.345 | 0.655 | 0.500 | 0.809 | 0.887 |
+| SAM3 (GT boxes, oracle) | 0.970 | 0.669 | 0.977 | 0.977 | 0.831 | 0.904 |
+| SAM3 (text prompt, zero-shot) | 0.028 | 0.020 | 0.081 | 0.141 | 0.840 | 0.909 |
+| YOLO11n-seg | 0.543 | 0.379 | 0.696 | 0.527 | 0.810 | 0.889 |

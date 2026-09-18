@@ -1,6 +1,6 @@
 # result/ — unified numbers + figures for the 4-model tonsillectomy segmentation comparison
 
-Models: **Mask R-CNN**, **YOLO11n-seg**, **SAM3** (zero-shot; **text-prompted** in the main figures, box-prompted variants in the Fig 3b ablation — see §5e), **MONAI UNet** (semantic; retrained here on the COCO-derived masks — see §5c).
+Models: **Mask R-CNN**, **YOLO11n-seg**, **SAM3** (**YOLO-box-prompted** two-stage pipeline in the main figures; zero-shot text and GT-box oracle in the Fig 3b/3c ablation — see §5e), **MONAI UNet** (semantic; retrained here on the COCO-derived masks — see §5c).
 The folder is a git repo: `github.com/thefireholder/Transoral-Resection-CV-Validity` (checkpoints / masks / image dumps are git-ignored).
 Dataset "1200images" = 1048 frames (train 732 / val 157 / test 158), 21-class vocabulary, 14 classes present in the test split.
 **All metrics are mask metrics** (never bounding box). All tables/figures use the **test** split unless stated.
@@ -118,10 +118,10 @@ for the gated `facebook/sam3`. `run_local.sh` defaults to Mask R-CNN batch 2 / l
 | **1a** training curve: loss | train ✔ val ✔ (12-epoch rerun) | train ✔ val ✔ (60 epochs) | — (not trained) | train ✔ val ✔ (98 epochs, §5c) |
 | **1a** training curve: train-split P/R | ✔ (12-ep rerun) | ✔ (rerun) | — | ✔ (retrain, §5c) |
 | **1a** training curve: val-split P/R | ✔ | ✔ | — | ✔ |
-| **1b** overlay pred vs GT | ✔ | ✔ | ✔ text-prompt (§5e) | ✔ (retrain) |
-| **2** mask PR curve per class | ✔ (original curves were **box**-based; these are mask) | ✔ | ✔ text-prompt | ✔ (retrain) |
-| **3** mAP table per class + aggregate | ✔ | ✔ | ✔ text-prompt; Fig 3b/3c: all 3 conditions | ✔ (all 14 classes after retrain) |
-| **4** mAP / Dice / IoU bars | ✔ | ✔ | ✔ text-prompt | ✔ (all `recomputed`, same definition) |
+| **1b** overlay pred vs GT | ✔ | ✔ | ✔ YOLO-box (§5e) | ✔ (retrain) |
+| **2** mask PR curve per class | ✔ (original curves were **box**-based; these are mask) | ✔ | ✔ YOLO-box | ✔ (retrain) |
+| **3** mAP table per class + aggregate | ✔ | ✔ | ✔ YOLO-box; Fig 3b/3c: all 3 conditions | ✔ (all 14 classes after retrain) |
+| **4** mAP / Dice / IoU bars | ✔ | ✔ | ✔ YOLO-box | ✔ (all `recomputed`, same definition) |
 | **5** dataset-size sweep | **n/p** → `dataset_size_sweep/` | **n/p** → same | n/a (no training) | n/a |
 
 "n/p" panels/cells are drawn automatically; nothing crashes when data is missing.
@@ -254,13 +254,14 @@ comparison is now organised as:
 
 | key | prompt | role |
 |---|---|---|
-| `sam3_text` | class-name text (`scripts/rerun/sam3/prompts.json`), zero-shot | **the SAM3 in the main figures** (self-contained, same task as the other three) |
-| `sam3_yolobox` | YOLO11n's predicted boxes (+ YOLO class & score) | two-stage detector→SAM3; shows whether SAM3 refines YOLO's masks |
-| `sam3_gtbox` | GT boxes (the original run) | oracle upper bound |
+| `sam3_yolobox` | YOLO11n's predicted boxes (+ YOLO class & score) | **the SAM3 in the main figures**: two-stage detector→SAM3 (decision 2026-09-18) |
+| `sam3_gtbox` | GT boxes (the original run) | oracle upper bound (Fig 3b/3c only) |
+| `sam3_text` | class-name text (`scripts/rerun/sam3/prompts.json`), zero-shot | fully self-contained zero-shot condition (Fig 3b/3c only; ~0.03 mAP, explained in the manuscript) |
 
 **Figure 3b** (per-class AP for the three conditions + YOLO reference) and **Figure 3c** (one aggregate row each:
 mAP, P, R, IoU, Dice + "what it tests") hold the ablation; `plot_config.MAIN_MODELS` picks which SAM3 enters
-Figs 1b/2/3/4 (`sam3_text` by default).
+Figs 1b/2/3/4 (`sam3_yolobox` by default). The condition descriptions are kept in
+`plot_config.FIG3B_NOTES` for the figure caption but not drawn (`FIG3B_SHOW_NOTES = False`).
 
 Result (2026-09-18, laptop run): text-prompted SAM3 is essentially blind to this vocabulary — mAP50 **0.028**;
 anatomy prompts return nothing usable, "suction tube" fires on every frame (2,547 instances), "base of tongue"

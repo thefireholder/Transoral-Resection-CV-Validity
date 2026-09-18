@@ -403,7 +403,8 @@ def fig3():
 # ---------------------------------------------------------------------------
 def fig3b():
     models = list(C.FIG3B_ROWS) + list(C.FIG3B_REFERENCE)
-    notes = [f"{C.ALL_MODELS[k]['short']}: {C.FIG3B_NOTES[k]}" for k in models if k in C.FIG3B_NOTES]
+    notes = [f"{C.ALL_MODELS[k]['short']}: {C.FIG3B_NOTES[k]}" for k in models if k in C.FIG3B_NOTES] \
+        if C.FIG3B_SHOW_NOTES else []
     _per_class_ap_table(models, C.FIG3B_METRICS, "fig3b_sam3_prompt_ablation_per_class",
                         f"SAM3 prompting ablation -- mask AP per class, {C.SPLIT} split  (source: {C.METRIC_SOURCE})",
                         extra_agg=C.FIG3B_EXTRA_AGG, footnotes=notes)
@@ -415,17 +416,18 @@ def fig3b():
 def fig3c():
     rows_keys = list(C.FIG3B_ROWS) + list(C.FIG3B_REFERENCE)
     agg, filled = aggregate_table(models=rows_keys)
-    header = ["SAM3 prompt condition"] + [lab for _, lab in C.FIG3C_METRICS] + ["what it tests"]
+    header = ["SAM3 prompt condition"] + [lab for _, lab in C.FIG3C_METRICS] + (["what it tests"] if C.FIG3B_SHOW_NOTES else [])
     text = []
     for k in rows_keys:
         vals = []
         for m, _ in C.FIG3C_METRICS:
             v = agg.get(k, {}).get(m, np.nan)
             vals.append(C.NP_TEXT if np.isnan(v) else f"{v:.3f}" + ("*" if (k, m) in filled else ""))
-        text.append([C.ALL_MODELS[k]["label"]] + vals + [C.FIG3B_NOTES.get(k, "")])
+        text.append([C.ALL_MODELS[k]["label"]] + vals + ([C.FIG3B_NOTES.get(k, "")] if C.FIG3B_SHOW_NOTES else []))
     ncol = len(header)
-    widths = [0.16] + [0.08] * len(C.FIG3C_METRICS) + [0.36]
-    fig, ax = plt.subplots(figsize=(14, 0.45 * (len(text) + 2)))
+    widths = ([0.16] + [0.08] * len(C.FIG3C_METRICS) + [0.36]) if C.FIG3B_SHOW_NOTES else \
+             ([0.25] + [0.125] * len(C.FIG3C_METRICS))
+    fig, ax = plt.subplots(figsize=(14 if C.FIG3B_SHOW_NOTES else 10, 0.45 * (len(text) + 2)))
     ax.axis("off")
     tab = ax.table(cellText=text, colLabels=header, colWidths=widths, loc="center", cellLoc="center")
     tab.auto_set_font_size(False); tab.set_fontsize(7.5); tab.scale(1, 1.5)
@@ -433,12 +435,11 @@ def fig3c():
         cell.set_edgecolor("0.8")
         if r == 0:
             cell.set_text_props(weight="bold"); cell.set_facecolor("0.93")
-        if c in (0, ncol - 1):
+        if c == 0 or (C.FIG3B_SHOW_NOTES and c == ncol - 1):
             cell.set_text_props(ha="left"); cell.PAD = 0.02
         if r == len(C.FIG3B_ROWS) + 1 and C.FIG3B_REFERENCE:      # rule above the reference rows
             cell.set_linewidth(1.2)
-    ax.set_title(f"SAM3 prompting ablation -- aggregate, {C.SPLIT} split  (source: {C.METRIC_SOURCE}; "
-                 f"P/R at the F1-max confidence, IoU/Dice over matched instances)", fontsize=9)
+    ax.set_title(f"SAM3 prompting ablation -- aggregate, {C.SPLIT} split  (source: {C.METRIC_SOURCE})", fontsize=9)
     save(fig, "fig3c_sam3_prompt_ablation_aggregate")
     stem = C.FIG_DIR / "fig3c_sam3_prompt_ablation_aggregate"
     with open(stem.with_suffix(".csv"), "w", newline="") as f:

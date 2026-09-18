@@ -18,25 +18,28 @@ FIG_DIR = RESULT / "figures"
 ALL_MODELS = {
     "maskrcnn":     {"label": "Mask R-CNN",               "short": "Mask R-CNN",  "color": "#0072B2"},
     "yolo":         {"label": "YOLO11n-seg",              "short": "YOLO11n",     "color": "#E69F00"},
-    "sam3_text":    {"label": "SAM3 (text prompt, zero-shot)", "short": "SAM3 text", "color": "#009E73"},
-    "sam3_yolobox": {"label": "SAM3 (YOLO boxes)",        "short": "SAM3+YOLO", "color": "#56B4E9"},
+    "sam3_yolobox": {"label": "SAM3 (YOLO boxes)",        "short": "SAM3+YOLO",   "color": "#009E73"},
+    "sam3_text":    {"label": "SAM3 (text prompt, zero-shot)", "short": "SAM3 text", "color": "#56B4E9"},
     "sam3_gtbox":   {"label": "SAM3 (GT boxes, oracle)",  "short": "SAM3 GTbox", "color": "#999999"},
     "monai":        {"label": "MONAI UNet",               "short": "MONAI",       "color": "#CC79A7"},
 }
-# The MAIN comparison (Figs 1b, 2, 3, 4): one column per self-contained system. SAM3 enters as the
-# zero-shot text-prompted model; the box-prompted variants live in Fig 3b only.
-MAIN_MODELS = ["maskrcnn", "yolo", "sam3_text", "monai"]
+# The MAIN comparison (Figs 1b, 2, 3, 4): one column per system. SAM3 enters as the two-stage
+# YOLO-boxes -> SAM3 pipeline (decision 2026-09-18: the zero-shot text-prompted SAM3 scores ~0.03 mAP on
+# this vocabulary and would only raise questions in the main figures; it and the GT-box oracle are shown
+# in the ablation Figs 3b/3c and explained in the manuscript).
+MAIN_MODELS = ["maskrcnn", "yolo", "sam3_yolobox", "monai"]
 MODELS = {k: ALL_MODELS[k] for k in MAIN_MODELS}
 
 # Figure 3b -- SAM3 prompting ablation table: rows in this order, then the reference rows.
-FIG3B_ROWS = ["sam3_text", "sam3_yolobox", "sam3_gtbox"]
+FIG3B_ROWS = ["sam3_yolobox", "sam3_gtbox", "sam3_text"]   # main-figure condition first
 FIG3B_REFERENCE = ["yolo"]                    # shown below a rule, e.g. YOLO alone vs YOLO boxes + SAM3
 FIG3B_METRICS = ["AP50", "AP50_95"]            # per-class columns, like Fig 3
 FIG3B_EXTRA_AGG = []                           # extra aggregate rows under the table, e.g. [("iou", "mean IoU")]
 # Figure 3c -- compact aggregate table of the same rows: six metrics + a "what it tests" note per row.
 FIG3C_METRICS = [("mAP50", "mAP@0.5"), ("mAP50_95", "mAP@0.5:0.95"), ("precision", "P"), ("recall", "R"),
                  ("iou", "IoU"), ("dice", "Dice")]
-FIG3B_NOTES = {                               # one line per row, printed in the table
+FIG3B_SHOW_NOTES = False                      # notes below: kept for the manuscript caption, not drawn by default
+FIG3B_NOTES = {                               # one line per row (drawn only if FIG3B_SHOW_NOTES)
     "sam3_text":    "class-name text prompts: detect + classify + segment, zero-shot",
     "sam3_yolobox": "YOLO11n boxes (+class, +score) as prompts: SAM3 only draws the mask",
     "sam3_gtbox":   "GT boxes as prompts: perfect localisation + class = upper bound",
