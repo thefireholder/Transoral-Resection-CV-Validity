@@ -1,0 +1,4 @@
+train: 732 masks
+val: 157 masks
+test: 158 masks
+wrote /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/monai/data

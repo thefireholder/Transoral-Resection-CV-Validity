@@ -1,0 +1,70 @@
+MONAI UNet
+
+------------------------------------------------------------
+base of tongue               | AP@0.5: 0.3404 | AP@0.5:0.95: 0.2375
+cut                          | AP@0.5: 0.2643 | AP@0.5:0.95: 0.0904
+endotracheal tube            | AP@0.5: 1.0000 | AP@0.5:0.95: 0.6396
+fat fascia                   | AP@0.5: 0.0000 | AP@0.5:0.95: 0.0000
+ligasure                     | AP@0.5: 0.0000 | AP@0.5:0.95: 0.0000
+maryland                     | AP@0.5: 0.6006 | AP@0.5:0.95: 0.3762
+medial pterygoid muscle      | AP@0.5: 0.4002 | AP@0.5:0.95: 0.1511
+monopolar                    | AP@0.5: 0.5003 | AP@0.5:0.95: 0.3157
+parapharyngeal fat           | AP@0.5: 0.7629 | AP@0.5:0.95: 0.3828
+posterior pharyngeal wall    | AP@0.5: 0.2859 | AP@0.5:0.95: 0.0706
+prevertebral fascia          | AP@0.5: 0.0000 | AP@0.5:0.95: 0.0000
+soft palate                  | AP@0.5: 0.4301 | AP@0.5:0.95: 0.2058
+suction                      | AP@0.5: 0.4107 | AP@0.5:0.95: 0.1695
+
+Per-class IoU / Dice (per-frame mean over GT-present frames):
+------------------------------------------------------------
+base of tongue               | Mean IoU: 0.4185 | Mean Dice: 0.5080
+cut                          | Mean IoU: 0.6038 | Mean Dice: 0.7476
+endotracheal tube            | Mean IoU: 0.7924 | Mean Dice: 0.8837
+fat fascia                   | Mean IoU: 0.0000 | Mean Dice: 0.0000
+ligasure                     | Mean IoU: 0.0000 | Mean Dice: 0.0000
+maryland                     | Mean IoU: 0.6097 | Mean Dice: 0.7258
+medial pterygoid muscle      | Mean IoU: 0.2881 | Mean Dice: 0.3635
+monopolar                    | Mean IoU: 0.4227 | Mean Dice: 0.4869
+parapharyngeal fat           | Mean IoU: 0.5748 | Mean Dice: 0.7072
+posterior pharyngeal wall    | Mean IoU: 0.3295 | Mean Dice: 0.4367
+prevertebral fascia          | Mean IoU: 0.0000 | Mean Dice: 0.0000
+soft palate                  | Mean IoU: 0.4476 | Mean Dice: 0.5683
+suction                      | Mean IoU: 0.5086 | Mean Dice: 0.6507
+
+Per-class pixel precision / recall (pooled over test split):
+------------------------------------------------------------
+base of tongue               | Precision: 0.6588 | Recall: 0.4258
+cut                          | Precision: 0.7229 | Recall: 0.7215
+endotracheal tube            | Precision: 0.9225 | Recall: 0.8402
+fat fascia                   | Precision:    n/a | Recall: 0.0000
+ligasure                     | Precision:    n/a | Recall: 0.0000
+maryland                     | Precision: 0.6255 | Recall: 0.8265
+medial pterygoid muscle      | Precision: 0.6045 | Recall: 0.5011
+monopolar                    | Precision: 0.5991 | Recall: 0.5597
+parapharyngeal fat           | Precision: 0.4139 | Recall: 0.8775
+posterior pharyngeal wall    | Precision: 0.6612 | Recall: 0.5156
+prevertebral fascia          | Precision: 0.0000 | Recall: 0.0000
+soft palate                  | Precision: 0.7063 | Recall: 0.7208
+suction                      | Precision: 0.5529 | Recall: 0.7007
+
+Aggregate
+AGGREGATE (all 13 classes with GT)
+  mAP@0.5: 0.3843
+  mAP@0.5:0.95: 0.2030
+  Mean IoU: 0.3843
+  Mean Dice: 0.4676
+  Mean Precision: 0.5880
+  Mean Recall: 0.5146
+AGGREGATE (evaluable, >=5 GT frames, n=12)
+  mAP@0.5: 0.4163
+  mAP@0.5:0.95: 0.2199
+  Mean IoU: 0.4163
+  Mean Dice: 0.5065
+  Mean Precision: 0.6467
+  Mean Recall: 0.5574
+
+Notes:
+- AP conventions: 8-connected components of the semantic mask (GT and pred); components < 20 px dropped; score = mean class softmax probability over the component; COCO 101-point AP.
+- prevertebral fascia (1 GT frame), fat fascia and ligasure score 0: the latter two have zero training presence.
+- fat fascia / ligasure precision is n/a (no predicted pixels).
+- Not directly comparable to promptable-model (SAM2) numbers if those were computed from GT-prompted masks.

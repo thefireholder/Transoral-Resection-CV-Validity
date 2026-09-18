@@ -1,0 +1,140 @@
+HANDOFF: run the GPU jobs in this folder on a local machine (single ~6 GB GPU, no SLURM)
+=========================================================================================
+
+You are receiving a copy of  <cluster>/u/sl257/shared_data/result/  (this folder).
+It was prepared by a Claude session on the Illinois cluster. Read README.md first
+(sections 0, 2, 5, 7). This file is the short version for you.
+
+GOAL
+----
+Run the three GPU jobs (and optionally the dataset-size sweep) that could not be run on the
+cluster session, so the "n/p" gaps in figures/ get filled:
+  1. SAM3 zero-shot eval, saving masks+scores   -> data/predictions/sam3_test.json
+  2. Mask R-CNN retrain, 12 epochs, LR x0.1 @8,11, per-epoch train/val P/R, adopted as THE model
+                                                -> data/training_curves/maskrcnn_rerun.csv, data/predictions/maskrcnn_test.json
+  3. YOLO11n-seg retrain, save_period=1, per-epoch train/val P/R
+                                                -> data/training_curves/yolo_rerun.csv, data/predictions/yolo_rerun_test.json
+  4. MONAI UNet retrain on COCO-derived masks (NEW, 2026-09-17; steps 1-3 are already done)
+                                                -> data/training_curves/monai_rerun.csv, data/predictions/monai_test.json
+  (5. optional: --sweep, 10 trainings, long)    -> data/dataset_size_sweep.csv
+Everything is driven by ONE script:  scripts/rerun/run_local.sh   (serial GPU, resumable, background CPU post-processing).
+Do not rewrite the pipeline; fix only what blocks it and note every change at the bottom of this file.
+
+WHAT THE USER HAS TO PROVIDE ON THIS MACHINE (check before running)
+--------------------------------------------------------------------
+A. Data. processed_data/ is ALREADY on this laptop (copied earlier from the cluster's /u/sl257/shared_data/).
+   Find it first (e.g. `find / -type d -name 1200images -path "*coco_format*" 2>/dev/null`) and confirm it has
+   the layout below; then put this result/ folder NEXT TO it and set TORS_SHARED = their common parent
+   (if result/ cannot sit next to it, TORS_SHARED just has to be a folder containing processed_data/ --
+   result/ can live anywhere). Layout expected:
+     $TORS_SHARED/processed_data/coco_format/1200images/{annotations,images}/     468 MB  (train/val/test = 732/157/158 frames)
+     $TORS_SHARED/processed_data/yolo_format/1200images/{images,labels,data.yaml} 470 MB  (same frames, YOLO labels)
+     $TORS_SHARED/result/                                                          ~190 MB (this folder)
+   Anything else inside processed_data (undergrad_data, converter, coco_format/maskrcnn, 600images) is unused.
+   The cluster's train_script/ is NOT needed (it only holds the OLD checkpoints/logs; everything derived from them is
+   already inside result/data/).
+   Verify the local copy is the current dataset (an older copy may predate the JML619 import / class merge):
+     python -c "import json;d=json.load(open('$TORS_SHARED/processed_data/coco_format/1200images/annotations/instances_test.json'));print(len(d['images']),len(d['annotations']),len(d['categories']))"
+     must print:  158 984 21        (train json: 732 images / 5896 annotations; val: 157 / 1347)
+     grep -c "" $TORS_SHARED/processed_data/yolo_format/1200images/data.yaml   -> nc: 21, 21 names
+   The coco_format and yolo_format image folders are duplicates of the same 1048 jpgs; both are required as-is
+   (Mask R-CNN/SAM3 read COCO, YOLO reads yolo_format).
+   -> the `path:` line in processed_data/yolo_format/1200images/data.yaml is an absolute CLUSTER path
+      (/projects/illinois/...). Edit it to the local absolute path of that 1200images folder, or YOLO will not find images.
+   -> sanity: python -c "import sys;sys.path.insert(0,'scripts');from seglib import load_coco_gt;g=load_coco_gt('test');print(len(g['images']))"  must print 158
+B. Conda env (any name; pass CONDA_ENV=<name>):
+     torch + torchvision (CUDA build), ultralytics (>=8.3), transformers (>=5.0, must have Sam3Model/Sam3Processor),
+     pycocotools, opencv-python, matplotlib, pyyaml, pillow, numpy.  pandas is NOT needed.
+   Cluster versions that are known to work: torch 2.6.0, torchvision 0.21, ultralytics 8.4.115, transformers 5.14, numpy 2.4, matplotlib 3.11.
+C. HuggingFace access to the gated model facebook/sam3:  `huggingface-cli login` once (user must have accepted the license).
+   Do NOT set HF_HUB_OFFLINE=1 here (that is only for the cluster's pre-cached copy).
+D. yolo11n-seg.pt (pretrained) is auto-downloaded by ultralytics; needs internet on first use.
+
+FILES TO COPY FROM THE CLUSTER FOR THE MONAI STEP (2026-09-17)  -- everything else on the laptop is already current
+--------------------------------------------------------------------------------------------------------------------
+Copy these into the laptop's result/ at the same relative paths, overwriting:
+  HANDOFF_FOR_CLAUDE.txt                          (this file)
+  README.md
+  scripts/rerun/run_local.sh                      (new step 4 "monai"; --only monai)
+  scripts/rerun/monai/                            (whole folder, NEW: prepare_masks.py, monai_train_curves.py,
+                                                   monai_train_curves.slurm, data/classes.json, data/split.json;
+                                                   data/masks/ can be skipped -- run_local regenerates it in 7 s)
+  scripts/original/monai/                         (whole folder, NEW: the MONAI project's src/ + 4 reference scripts;
+                                                   monai_train_curves.py imports src/ from here)
+  scripts/original/README.md
+  scripts/collect_results.py                      (MONAI "superseded" handling)
+  plot/plot_config.py                             (FIG1A_MODELS now includes monai)
+  scripts/rerun/yolo_train_curves.py              (bug fix: epochN.pt is 0-indexed; only matters if YOLO is ever rerun)
+  data/training_curves/yolo_rerun.csv             (REPAIRED copy -- the laptop's own file has P/R shifted by one epoch
+                                                   and no epoch-60 losses; overwrite it)
+Do NOT copy back from the cluster: data/predictions/*, data/computed/*, data/pr_curves/*, data/metrics_*.csv,
+data/SOURCES.md, figures/ -- the laptop already has equal or newer versions, and collect_results.py /
+make_figures.py regenerate the derived ones anyway.
+Total: ~30 files, < 1 MB.
+
+HOW TO RUN
+----------
+  cd $TORS_SHARED/result
+  export TORS_SHARED=...            # parent of result/ and processed_data/
+  bash scripts/rerun/run_local.sh --dry           # prints the plan, checks torch/cuda
+  CONDA_ENV=<env> bash scripts/rerun/run_local.sh # ~8-12 h total on a 6 GB laptop GPU; leave it running
+  CONDA_ENV=<env> bash scripts/rerun/run_local.sh --only monai   # <- what is needed NOW (sam3/maskrcnn/yolo are done;
+                                                  #    their .done markers may be missing here -- --only monai is safe regardless)
+  MONAI needs:  pip install "monai==1.5.1" scikit-learn tqdm tensorboard   (monai 1.6 forces torch>=2.8: do NOT let pip
+  upgrade torch -- if it tries, install with the version pin above; check `python -c "import torch,torchvision"` after)
+  CONDA_ENV=<env> bash scripts/rerun/run_local.sh --sweep   # only if the user wants Figure 5 now (1-2 days)
+Order is fixed: sam3 -> maskrcnn -> yolo -> monai (-> sweep). GPU steps are serial (VRAM); post-processing runs in background.
+Resumable: finished steps leave scripts/rerun/logs/local/<step>.done and are skipped. Delete a .done to redo a step.
+Logs: scripts/rerun/logs/local/<step>.out|.err ; progress: scripts/rerun/logs/local/run_local.log
+
+6 GB VRAM DEFAULTS (already set in run_local.sh; override via env vars)
+-----------------------------------------------------------------------
+  MRCNN_BATCH=2 MRCNN_LR=0.0025   (cluster recipe is 4 / 0.005; linear LR scaling; record which one was used)
+  SAM3_ARGS=--fp16                (fp32 SAM3 weights ~3.5 GB; fp16 is safer)
+  YOLO_BATCH=16 YOLO_EPOCHS=60    (yolo11n @640 fits)
+  MONAI_BATCH=4 MONAI_EPOCHS=100  (UNet @512 fits at 4; early stopping usually ends it around epoch 40-60; ~2 min/epoch)
+  PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+If Mask R-CNN still OOMs at batch 2: MRCNN_BATCH=1 MRCNN_LR=0.00125.  If SAM3 OOMs in fp16, nothing else to cut -- report it.
+The recipe actually used is written to scripts/rerun/output/maskrcnn/recipe.txt -- keep it.
+
+HOW TO VERIFY WHEN DONE
+-----------------------
+  ls data/predictions/            -> sam3_test.json, maskrcnn_test.json (its "model" field == "maskrcnn_rerun"), yolo_rerun_test.json,
+                                     monai_test.json ("model" == "monai_rerun")
+  ls data/training_curves/        -> monai_rerun.csv (one row per epoch run, columns incl. val_dice_semantic)
+  scripts/rerun/output/monai/     -> best_model.pth, final_model.pth, recipe.txt, log.txt
+  sanity: MONAI recomputed mAP50 in data/metrics_aggregate.csv is plausibly 0.3-0.5 (old unified model: 0.38);
+          figures/fig1a has a third (MONAI) column; fig1b/fig2 MONAI panels filled
+  ls data/training_curves/        -> maskrcnn_rerun.csv (12 rows), yolo_rerun.csv (60 rows), no "n/p" in train_precision columns
+  cat data/metrics_aggregate.csv  -> rows model=sam3,source=recomputed and model=maskrcnn,source=recomputed exist
+  sanity numbers (should be close): SAM3 recomputed mean IoU ~0.80, Dice ~0.87, mAP50 ~0.96;
+                                    YOLO reported mAP50 0.576;  Mask R-CNN 12-epoch: expect mAP50 >= 0.50 (old 5-epoch value)
+  figures/fig1a_training_curves.png  -> both columns have train AND val P/R lines
+  figures/fig1b_qualitative.png      -> SAM3 column filled (MONAI stays n/p, by design)
+  figures/fig2_pr_curves_per_model.png -> SAM3 panel filled
+  cat data/SOURCES.md             -> maskrcnn "reported" marked SUPERSEDED
+Final step (run_local.sh does it, re-run if in doubt):
+  python scripts/collect_results.py && python plot/make_figures.py
+
+THINGS NOT TO DO
+----------------
+- Do not edit files under data/ by hand (all generated; edit scripts/ or plot/plot_config.py instead).
+- Do not touch "some disorganized results/" or scripts/original/ (reference copies).
+- Do not change the Mask R-CNN schedule (12 epochs, --lr-steps 8 11) or seeds (42 / 0) without telling the user.
+- Do not run scripts/export_maskrcnn_predictions.py after the Mask R-CNN step -- it would overwrite the adopted
+  12-epoch predictions with the old 5-epoch ones (and needs cluster files anyway).
+
+WHAT TO SEND BACK TO THE CLUSTER
+--------------------------------
+Only these change and are small enough to copy back (the user will rsync them into the cluster's result/):
+  data/predictions/sam3_test.json, data/predictions/maskrcnn_test.json, data/predictions/yolo_rerun_test.json
+  data/training_curves/maskrcnn_rerun.csv, data/training_curves/yolo_rerun.csv, data/training_curves/monai_rerun.csv
+  data/predictions/monai_test.json, scripts/rerun/output/monai/ (recipe.txt + log.txt at least; best_model.pth ~100 MB optional)
+  scripts/rerun/logs/local/  (please re-copy the whole folder: the cluster copy of the earlier sam3/maskrcnn/yolo logs was lost)
+  data/computed/*, data/pr_curves/*, data/dataset_size_sweep.csv (if sweep)
+  scripts/rerun/output/maskrcnn/recipe.txt, scripts/rerun/logs/local/*.log|*.out
+  (best.pt / .pth checkpoints under scripts/rerun/output/ and scripts/rerun/dataset_size_sweep/runs/ are optional, large)
+Then on the cluster:  python scripts/collect_results.py && python plot/make_figures.py
+
+CHANGES MADE ON THIS MACHINE (append below)
+--------------------------------------------

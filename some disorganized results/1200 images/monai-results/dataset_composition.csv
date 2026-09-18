@@ -1,0 +1,4 @@
+case,train_frames,val_frames,test_frames,total
+JSR (right tonsil),303,65,65,433
+JML (left tonsil),429,92,93,614
+Total,732,157,158,1047

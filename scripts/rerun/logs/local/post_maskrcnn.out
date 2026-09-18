@@ -1,0 +1,16 @@
+maskrcnn  test: mAP50=0.5160 mAP50-95=0.3384 IoU=0.8062 Dice=0.8882  -> /home/sangjoon/Desktop/school/cimed/vinay/result/data/computed/maskrcnn_test.json
+wrote /home/sangjoon/Desktop/school/cimed/vinay/result/data/metrics_per_class.csv (98 rows)
+wrote /home/sangjoon/Desktop/school/cimed/vinay/result/data/metrics_aggregate.csv (7 rows)
+wrote /home/sangjoon/Desktop/school/cimed/vinay/result/data/SOURCES.md + data/training_curves/*.csv
+Figure 1a
+  saved figures/fig1a_training_curves.{png,pdf}
+Figure 1b
+  saved figures/fig1b_qualitative.{png,pdf}
+Figure 2
+  saved figures/fig2_pr_curves_per_model.{png,pdf}
+Figure 3
+  saved figures/fig3_map_table.{png,pdf}
+Figure 4
+  saved figures/fig4_aggregate_bars.{png,pdf}
+Figure 5
+  saved figures/fig5_dataset_size.{png,pdf}

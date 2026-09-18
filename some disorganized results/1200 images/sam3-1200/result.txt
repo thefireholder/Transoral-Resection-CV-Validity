@@ -1,0 +1,39 @@
+Instances: 983
+Mean IoU: 0.7974489110529859
+Mean Dice: 0.8692096103608354
+
+Per-class AP:
+------------------------------------------------------------
+base of tongue       | AP@0.5: 0.9848 | AP@0.5:0.95: 0.7341
+bipolar              | AP@0.5: 0.9950 | AP@0.5:0.95: 0.7916
+bot                  | AP@0.5: 0.9950 | AP@0.5:0.95: 0.8145
+cut                  | AP@0.5: 0.9950 | AP@0.5:0.95: 0.4498
+endotracheal tube    | AP@0.5: 0.9950 | AP@0.5:0.95: 0.9049
+ligasure             | AP@0.5: 0.9950 | AP@0.5:0.95: 0.7766
+maryland             | AP@0.5: 0.9539 | AP@0.5:0.95: 0.7329
+medial pterygoid muscle | AP@0.5: 0.9950 | AP@0.5:0.95: 0.5844
+monopolar            | AP@0.5: 0.9887 | AP@0.5:0.95: 0.7892
+parapharyngeal fat   | AP@0.5: 0.9950 | AP@0.5:0.95: 0.5986
+posterior pharyngeal wall | AP@0.5: 0.9813 | AP@0.5:0.95: 0.6789
+prevertebral fascia  | AP@0.5: 0.9950 | AP@0.5:0.95: 0.6965
+soft palate          | AP@0.5: 0.6837 | AP@0.5:0.95: 0.4502
+suction              | AP@0.5: 0.9618 | AP@0.5:0.95: 0.7010
+
+Per-class IoU / Dice:
+------------------------------------------------------------
+bipolar              | Mean IoU: 0.8879 | Mean Dice: 0.9385
+endotracheal tube    | Mean IoU: 0.9328 | Mean Dice: 0.9652
+bot                  | Mean IoU: 0.8974 | Mean Dice: 0.9459
+cut                  | Mean IoU: 0.7091 | Mean Dice: 0.8280
+monopolar            | Mean IoU: 0.8553 | Mean Dice: 0.9143
+soft palate          | Mean IoU: 0.6454 | Mean Dice: 0.7049
+maryland             | Mean IoU: 0.8504 | Mean Dice: 0.9106
+base of tongue       | Mean IoU: 0.8489 | Mean Dice: 0.9162
+posterior pharyngeal wall | Mean IoU: 0.8304 | Mean Dice: 0.9043
+medial pterygoid muscle | Mean IoU: 0.7780 | Mean Dice: 0.8728
+suction              | Mean IoU: 0.8500 | Mean Dice: 0.9130
+parapharyngeal fat   | Mean IoU: 0.7916 | Mean Dice: 0.8812
+prevertebral fascia  | Mean IoU: 0.8127 | Mean Dice: 0.8967
+ligasure             | Mean IoU: 0.8627 | Mean Dice: 0.9256
+mAP@0.5: 0.9652942840444789
+mAP@0.5:0.95: 0.6930781558297415

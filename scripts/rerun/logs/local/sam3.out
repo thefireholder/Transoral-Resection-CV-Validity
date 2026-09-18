@@ -1,0 +1,25 @@
+loading annotations into memory...
+Done (t=0.01s)
+creating index...
+index created!
+  50/984  running mean IoU 0.7393
+  100/984  running mean IoU 0.7423
+  150/984  running mean IoU 0.7451
+  200/984  running mean IoU 0.7423
+  250/984  running mean IoU 0.7409
+  300/984  running mean IoU 0.7399
+  350/984  running mean IoU 0.7480
+  400/984  running mean IoU 0.7622
+  450/984  running mean IoU 0.7653
+  500/984  running mean IoU 0.7689
+  550/984  running mean IoU 0.7710
+  600/984  running mean IoU 0.7769
+  650/984  running mean IoU 0.7815
+  700/984  running mean IoU 0.7839
+  750/984  running mean IoU 0.7876
+  800/984  running mean IoU 0.7906
+  850/984  running mean IoU 0.7920
+  900/984  running mean IoU 0.7936
+  950/984  running mean IoU 0.7963
+instances 983  mean IoU 0.7978  mean Dice 0.8695
+wrote /home/sangjoon/Desktop/school/cimed/vinay/result/data/predictions/sam3_test.json and /home/sangjoon/Desktop/school/cimed/vinay/result/data/computed/sam3_instances_test.csv

@@ -1,0 +1,69 @@
+subset,class,gt_frames,evaluable,dice_mean,dice_median,dice_pooled,iou_pooled,precision,recall,hd95_median_px,nsd15_mean,missed_frames,presence_tp,presence_fn,presence_fp,presence_tn
+Validation (combined),base of tongue,127,True,0.7694,0.8776,0.8176,0.6915,0.8579,0.781,80.2488,0.619,0,127,0,21,9
+Validation (combined),soft palate,132,True,0.7888,0.8599,0.843,0.7287,0.9043,0.7895,157.3539,0.6202,0,132,0,24,1
+Validation (combined),uvula,15,True,0.0129,0.0,0.0016,0.0008,0.0009,0.0066,244.1139,0.0806,8,6,9,59,83
+Validation (combined),posterior pharyngeal wall,73,True,0.4759,0.5077,0.4548,0.2944,0.4551,0.4546,366.931,0.3117,0,72,1,18,66
+Validation (combined),superior constrictor muscle,5,True,0.2457,0.1963,0.0678,0.0351,0.0357,0.6604,247.9324,0.1735,0,5,0,61,91
+Validation (combined),medial pterygoid muscle,65,True,0.4223,0.5099,0.4717,0.3087,0.4832,0.4608,379.2671,0.4115,3,62,3,27,65
+Validation (combined),parapharyngeal fat,43,True,0.6296,0.7696,0.5164,0.3481,0.4464,0.6126,470.5121,0.3857,0,43,0,49,65
+Validation (combined),prevertebral fascia,34,True,0.0,0.0,0.0,0.0,,0.0,,,34,0,34,0,123
+Validation (combined),fat fascia,0,False,,,,,,,,,0,0,0,0,157
+Validation (combined),palatoglossus muscle,0,False,,,,,,,,,0,0,0,0,157
+Validation (combined),palatopharyngeus muscle,0,False,,,,,,,,,0,0,0,0,157
+Validation (combined),cut,65,True,0.7524,0.7703,0.7751,0.6328,0.6905,0.8833,15.1476,0.9286,0,65,0,2,90
+Validation (combined),maryland,152,True,0.7913,0.9291,0.8133,0.6854,0.7697,0.8622,370.4626,0.6815,0,152,0,5,0
+Validation (combined),monopolar,146,True,0.6668,0.7503,0.7615,0.6149,0.7953,0.7304,88.3287,0.5941,0,146,0,11,0
+Validation (combined),suction,77,True,0.5263,0.5353,0.5398,0.3697,0.4813,0.6146,426.6055,0.3759,0,77,0,71,9
+Validation (combined),endotracheal tube,65,True,0.8126,0.8865,0.787,0.6488,0.9464,0.6736,22.5,0.7776,0,65,0,0,92
+Validation (combined),ligasure,0,False,,,,,,,,,0,0,0,0,157
+Test (combined),base of tongue,96,True,0.508,0.5128,0.5173,0.3489,0.6588,0.4258,369.9545,0.3913,0,95,1,59,3
+Test (combined),soft palate,155,True,0.5683,0.6564,0.7134,0.5545,0.7063,0.7208,749.9939,0.431,0,155,0,3,0
+Test (combined),uvula,0,False,,,0.0,0.0,0.0,,,,0,0,0,91,67
+Test (combined),posterior pharyngeal wall,95,True,0.4367,0.5925,0.5794,0.4079,0.6612,0.5156,312.2696,0.2373,0,92,3,31,32
+Test (combined),superior constrictor muscle,0,False,,,0.0,0.0,0.0,,,,0,0,0,77,81
+Test (combined),medial pterygoid muscle,94,True,0.3635,0.2446,0.5479,0.3774,0.6045,0.5011,741.6366,0.3015,2,89,5,23,41
+Test (combined),parapharyngeal fat,45,True,0.7072,0.7938,0.5625,0.3913,0.4139,0.8775,685.9061,0.4182,0,45,0,67,46
+Test (combined),prevertebral fascia,1,False,0.0,0.0,0.0,0.0,0.0,0.0,,,1,0,1,0,157
+Test (combined),fat fascia,33,True,0.0,0.0,0.0,0.0,,0.0,,,33,0,33,0,125
+Test (combined),palatoglossus muscle,0,False,,,,,,,,,0,0,0,0,158
+Test (combined),palatopharyngeus muscle,0,False,,,,,,,,,0,0,0,0,158
+Test (combined),cut,32,True,0.7476,0.7942,0.7222,0.5651,0.7229,0.7215,16.9292,0.9095,0,32,0,13,113
+Test (combined),maryland,147,True,0.7258,0.8057,0.7121,0.5529,0.6255,0.8265,354.1098,0.5575,0,147,0,11,0
+Test (combined),monopolar,114,True,0.4869,0.6277,0.5787,0.4072,0.5991,0.5597,495.5262,0.3812,2,110,4,34,10
+Test (combined),suction,82,True,0.6507,0.6895,0.6181,0.4473,0.5529,0.7007,359.0829,0.4558,0,82,0,76,0
+Test (combined),endotracheal tube,32,True,0.8837,0.8918,0.8794,0.7848,0.9225,0.8402,17.1673,0.8686,0,32,0,5,121
+Test (combined),ligasure,5,True,0.0,0.0,0.0,0.0,,0.0,,,5,0,5,0,153
+Test - JSR frames only,base of tongue,32,True,0.9153,0.9192,0.7691,0.6248,0.6985,0.8554,79.0005,0.7753,0,32,0,33,0
+Test - JSR frames only,soft palate,64,True,0.8085,0.8574,0.8303,0.7098,0.8849,0.782,179.1264,0.5929,0,64,0,1,0
+Test - JSR frames only,uvula,0,False,,,0.0,0.0,0.0,,,,0,0,0,33,32
+Test - JSR frames only,posterior pharyngeal wall,33,True,0.0675,0.0,0.0841,0.0439,0.2113,0.0525,697.3179,0.0616,0,30,3,0,32
+Test - JSR frames only,superior constrictor muscle,0,False,,,0.0,0.0,0.0,,,,0,0,0,33,32
+Test - JSR frames only,medial pterygoid muscle,33,True,0.0,0.0,0.0,0.0,0.0,0.0,638.4927,0.0,2,28,5,0,32
+Test - JSR frames only,parapharyngeal fat,0,False,,,0.0,0.0,0.0,,,,0,0,0,19,46
+Test - JSR frames only,prevertebral fascia,0,False,,,,,,,,,0,0,0,0,65
+Test - JSR frames only,fat fascia,33,True,0.0,0.0,0.0,0.0,,0.0,,,33,0,33,0,32
+Test - JSR frames only,palatoglossus muscle,0,False,,,,,,,,,0,0,0,0,65
+Test - JSR frames only,palatopharyngeus muscle,0,False,,,,,,,,,0,0,0,0,65
+Test - JSR frames only,cut,32,True,0.7476,0.7942,0.7374,0.584,0.7541,0.7215,16.9292,0.9095,0,32,0,3,30
+Test - JSR frames only,maryland,65,True,0.8908,0.8802,0.8757,0.7789,0.8405,0.9139,354.3884,0.7128,0,65,0,0,0
+Test - JSR frames only,monopolar,65,True,0.8108,0.8267,0.8403,0.7245,0.7977,0.8876,225.5883,0.6136,0,65,0,0,0
+Test - JSR frames only,suction,32,True,0.661,0.6843,0.633,0.463,0.673,0.5975,364.9022,0.3942,0,32,0,33,0
+Test - JSR frames only,endotracheal tube,32,True,0.8837,0.8918,0.8796,0.785,0.9228,0.8402,17.1673,0.8686,0,32,0,5,28
+Test - JSR frames only,ligasure,1,False,0.0,0.0,0.0,0.0,,0.0,,,1,0,1,0,64
+Test - JML frames only,base of tongue,64,True,0.3044,0.3035,0.2489,0.1421,0.5547,0.1604,776.2128,0.1993,0,63,1,26,3
+Test - JML frames only,soft palate,91,True,0.3993,0.3689,0.3984,0.2488,0.3309,0.5006,869.2114,0.3172,0,91,0,2,0
+Test - JML frames only,uvula,0,False,,,0.0,0.0,0.0,,,,0,0,0,58,35
+Test - JML frames only,posterior pharyngeal wall,62,True,0.6332,0.6732,0.6198,0.449,0.6772,0.5713,242.3712,0.3308,0,62,0,31,0
+Test - JML frames only,superior constrictor muscle,0,False,,,0.0,0.0,0.0,,,,0,0,0,44,49
+Test - JML frames only,medial pterygoid muscle,61,True,0.5601,0.6848,0.6507,0.4822,0.629,0.674,908.626,0.4547,0,61,0,23,9
+Test - JML frames only,parapharyngeal fat,45,True,0.7072,0.7938,0.5734,0.4019,0.4258,0.8775,685.9061,0.4182,0,45,0,48,0
+Test - JML frames only,prevertebral fascia,1,False,0.0,0.0,0.0,0.0,0.0,0.0,,,1,0,1,0,92
+Test - JML frames only,fat fascia,0,False,,,,,,,,,0,0,0,0,93
+Test - JML frames only,palatoglossus muscle,0,False,,,,,,,,,0,0,0,0,93
+Test - JML frames only,palatopharyngeus muscle,0,False,,,,,,,,,0,0,0,0,93
+Test - JML frames only,cut,0,False,,,0.0,0.0,0.0,,,,0,0,0,10,83
+Test - JML frames only,maryland,82,True,0.595,0.589,0.5896,0.4181,0.487,0.7471,351.5446,0.4344,0,82,0,11,0
+Test - JML frames only,monopolar,49,True,0.0573,0.0,0.0331,0.0168,0.0422,0.0272,539.7381,0.0597,2,45,4,34,10
+Test - JML frames only,suction,50,True,0.6441,0.7027,0.6089,0.4377,0.4959,0.7884,336.0889,0.4951,0,50,0,43,0
+Test - JML frames only,endotracheal tube,0,False,,,0.0,0.0,0.0,,,,0,0,0,0,93
+Test - JML frames only,ligasure,4,False,0.0,0.0,0.0,0.0,,0.0,,,4,0,4,0,89

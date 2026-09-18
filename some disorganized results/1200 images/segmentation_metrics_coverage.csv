@@ -1,0 +1,6 @@
+model,per_class_AP@0.50,per_class_AP@0.50:0.95,aggregate_mAP@0.50_instance,aggregate_mAP@0.50:0.95_instance,per_class_Dice,per_class_IoU,mean_Dice,mean_IoU,per_class_precision,per_class_recall,aggregate_precision,aggregate_recall,HD95,NSD_surface,box_vs_mask_split,confusion_matrix,PR_P_R_F1_curves,qualitative_overlays
+SAM2,yes,yes,yes,yes,yes,yes,yes,yes,curves only,curves only,curves only,curves only,no,no,no,no,yes,yes
+SAM3,yes,yes,yes,yes,yes,yes,yes,yes,curves only,curves only,curves only,curves only,no,no,no,no,yes,yes
+Mask R-CNN,no,no,no,no,no,no,no,no,curves only,curves only,curves only,curves only,no,no,no,no,partial (no F1),no
+YOLO-seg,yes,yes,yes,yes,no,no,no,no,yes,yes,yes,yes,no,no,yes,yes,yes,yes
+MONAI,no,no,no,no,yes,yes,yes,no,yes,yes,no,no,yes,yes,no,yes,no,yes

@@ -1,0 +1,164 @@
+device cuda  torch 2.7.0+cu126
+UNet params 6,512,353  classes 22
+
+Class distribution over 732 masks:
+  Class                   Pixels   Percent   Raw wt   Final wt
+  ------------------------------------------------------------
+  background         949,601,644  62.5612%    0.008      0.100 (clamped to background_weight)
+  base of tongue      20,023,812   1.3192%    0.387      0.387
+  bipolar             58,512,027   3.8549%    0.132      0.132
+  bot                 31,284,657   2.0611%    0.247      0.247
+  constrictor                  0   0.0000% 5099225548.978     15.000 (clipped from 5099225548.98)
+  cut                    244,518   0.0161%   31.654     15.000 (clipped from 31.65)
+  endotracheal tube      1,704,158   0.1123%    4.542      4.542
+  fat fascia                   0   0.0000% 5099225548.978     15.000 (clipped from 5099225548.98)
+  ligasure                     0   0.0000% 5099225548.978     15.000 (clipped from 5099225548.98)
+  maryland           128,533,410   8.4680%    0.060      0.060
+  medial pterygoid muscle      8,808,140   0.5803%    0.879      0.879
+  monopolar           70,916,518   4.6721%    0.109      0.109
+  palatoglossus muscle         68,898   0.0045%  112.340     15.000 (clipped from 112.34)
+  palatopharyngeus muscle         41,688   0.0027%  185.665     15.000 (clipped from 185.66)
+  parapharyngeal fat     14,684,057   0.9674%    0.527      0.527
+  pharyngeal                   0   0.0000% 5099225548.978     15.000 (clipped from 5099225548.98)
+  posterior pharyngeal wall     20,997,844   1.3834%    0.369      0.369
+  prevertebral fascia      2,117,729   0.1395%    3.655      3.655
+  soft palate        165,732,313  10.9187%    0.047      0.047
+  suction             31,611,798   2.0826%    0.245      0.245
+  superior constrictor muscle      7,739,988   0.5099%    1.000      1.000
+  uvula                5,252,001   0.3460%    1.474      1.474
+{'epoch': 1, 'train_loss': 0.9514, 'val_loss': 0.6596, 'train_precision': 1.0, 'train_recall': 0.0, 'val_precision': 1.0, 'val_recall': 0.0, 'val_mAP50': 0.0, 'val_mAP50_95': 0.0, 'val_dice_semantic': 0.068, 'lr': 0.0001} (1110s)
+  new best val mean Dice 0.0680 (epoch 1) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 2, 'train_loss': 0.5919, 'val_loss': 0.524, 'train_precision': 0.1549, 'train_recall': 0.0145, 'val_precision': 0.353, 'val_recall': 0.0464, 'val_mAP50': 0.0199, 'val_mAP50_95': 0.0026, 'val_dice_semantic': 0.0785, 'lr': 0.0001} (397s)
+  new best val mean Dice 0.0785 (epoch 2) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 3, 'train_loss': 0.5106, 'val_loss': 0.4828, 'train_precision': 0.2748, 'train_recall': 0.0628, 'val_precision': 0.2252, 'val_recall': 0.0717, 'val_mAP50': 0.0317, 'val_mAP50_95': 0.0072, 'val_dice_semantic': 0.1785, 'lr': 0.0001} (238s)
+  new best val mean Dice 0.1785 (epoch 3) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 4, 'train_loss': 0.4782, 'val_loss': 0.4692, 'train_precision': 0.3652, 'train_recall': 0.0747, 'val_precision': 0.2529, 'val_recall': 0.083, 'val_mAP50': 0.0435, 'val_mAP50_95': 0.0134, 'val_dice_semantic': 0.2062, 'lr': 0.0001} (326s)
+  new best val mean Dice 0.2062 (epoch 4) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 5, 'train_loss': 0.4631, 'val_loss': 0.4621, 'train_precision': 0.3041, 'train_recall': 0.1046, 'val_precision': 0.1985, 'val_recall': 0.0761, 'val_mAP50': 0.0372, 'val_mAP50_95': 0.0098, 'val_dice_semantic': 0.2296, 'lr': 0.0001} (539s)
+  new best val mean Dice 0.2296 (epoch 5) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 6, 'train_loss': 0.4548, 'val_loss': 0.4583, 'train_precision': 0.2995, 'train_recall': 0.1078, 'val_precision': 0.1838, 'val_recall': 0.0817, 'val_mAP50': 0.0363, 'val_mAP50_95': 0.0141, 'val_dice_semantic': 0.2408, 'lr': 0.0001} (482s)
+  new best val mean Dice 0.2408 (epoch 6) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 7, 'train_loss': 0.4492, 'val_loss': 0.4541, 'train_precision': 0.26, 'train_recall': 0.1017, 'val_precision': 0.137, 'val_recall': 0.0802, 'val_mAP50': 0.0576, 'val_mAP50_95': 0.0288, 'val_dice_semantic': 0.2646, 'lr': 0.0001} (244s)
+  new best val mean Dice 0.2646 (epoch 7) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 8, 'train_loss': 0.4437, 'val_loss': 0.4507, 'train_precision': 0.2258, 'train_recall': 0.1206, 'val_precision': 0.1537, 'val_recall': 0.0869, 'val_mAP50': 0.0591, 'val_mAP50_95': 0.0304, 'val_dice_semantic': 0.2831, 'lr': 0.0001} (118s)
+  new best val mean Dice 0.2831 (epoch 8) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 9, 'train_loss': 0.4386, 'val_loss': 0.4508, 'train_precision': 0.2246, 'train_recall': 0.1359, 'val_precision': 0.1016, 'val_recall': 0.072, 'val_mAP50': 0.0481, 'val_mAP50_95': 0.0143, 'val_dice_semantic': 0.2902, 'lr': 0.0001} (136s)
+  new best val mean Dice 0.2902 (epoch 9) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 10, 'train_loss': 0.4335, 'val_loss': 0.4436, 'train_precision': 0.3531, 'train_recall': 0.1756, 'val_precision': 0.1669, 'val_recall': 0.1268, 'val_mAP50': 0.0822, 'val_mAP50_95': 0.0403, 'val_dice_semantic': 0.3387, 'lr': 0.0001} (98s)
+  new best val mean Dice 0.3387 (epoch 10) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 11, 'train_loss': 0.427, 'val_loss': 0.4378, 'train_precision': 0.6005, 'train_recall': 0.2897, 'val_precision': 0.3683, 'val_recall': 0.214, 'val_mAP50': 0.1616, 'val_mAP50_95': 0.0745, 'val_dice_semantic': 0.3766, 'lr': 0.0001} (91s)
+  new best val mean Dice 0.3766 (epoch 11) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 12, 'train_loss': 0.4209, 'val_loss': 0.4377, 'train_precision': 0.4171, 'train_recall': 0.2861, 'val_precision': 0.2726, 'val_recall': 0.219, 'val_mAP50': 0.1603, 'val_mAP50_95': 0.0706, 'val_dice_semantic': 0.3812, 'lr': 0.0001} (134s)
+  new best val mean Dice 0.3812 (epoch 12) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 13, 'train_loss': 0.4141, 'val_loss': 0.431, 'train_precision': 0.489, 'train_recall': 0.3446, 'val_precision': 0.3428, 'val_recall': 0.2454, 'val_mAP50': 0.1905, 'val_mAP50_95': 0.0935, 'val_dice_semantic': 0.4257, 'lr': 0.0001} (102s)
+  new best val mean Dice 0.4257 (epoch 13) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 14, 'train_loss': 0.4068, 'val_loss': 0.4269, 'train_precision': 0.5041, 'train_recall': 0.3643, 'val_precision': 0.3588, 'val_recall': 0.249, 'val_mAP50': 0.2054, 'val_mAP50_95': 0.1007, 'val_dice_semantic': 0.4524, 'lr': 0.0001} (99s)
+  new best val mean Dice 0.4524 (epoch 14) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 15, 'train_loss': 0.4014, 'val_loss': 0.428, 'train_precision': 0.5349, 'train_recall': 0.3968, 'val_precision': 0.3383, 'val_recall': 0.2571, 'val_mAP50': 0.2103, 'val_mAP50_95': 0.0974, 'val_dice_semantic': 0.4445, 'lr': 0.0001} (88s)
+{'epoch': 16, 'train_loss': 0.3953, 'val_loss': 0.4242, 'train_precision': 0.5794, 'train_recall': 0.4763, 'val_precision': 0.3438, 'val_recall': 0.2815, 'val_mAP50': 0.2128, 'val_mAP50_95': 0.0986, 'val_dice_semantic': 0.4668, 'lr': 0.0001} (84s)
+  new best val mean Dice 0.4668 (epoch 16) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 17, 'train_loss': 0.3897, 'val_loss': 0.42, 'train_precision': 0.5923, 'train_recall': 0.5726, 'val_precision': 0.3807, 'val_recall': 0.279, 'val_mAP50': 0.2357, 'val_mAP50_95': 0.1137, 'val_dice_semantic': 0.4984, 'lr': 0.0001} (79s)
+  new best val mean Dice 0.4984 (epoch 17) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 18, 'train_loss': 0.3845, 'val_loss': 0.4203, 'train_precision': 0.6583, 'train_recall': 0.5933, 'val_precision': 0.3628, 'val_recall': 0.2727, 'val_mAP50': 0.2308, 'val_mAP50_95': 0.1242, 'val_dice_semantic': 0.4995, 'lr': 0.0001} (77s)
+  new best val mean Dice 0.4995 (epoch 18) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 19, 'train_loss': 0.3801, 'val_loss': 0.415, 'train_precision': 0.6506, 'train_recall': 0.6175, 'val_precision': 0.4774, 'val_recall': 0.325, 'val_mAP50': 0.2893, 'val_mAP50_95': 0.1485, 'val_dice_semantic': 0.5332, 'lr': 0.0001} (79s)
+  new best val mean Dice 0.5332 (epoch 19) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 20, 'train_loss': 0.3778, 'val_loss': 0.4142, 'train_precision': 0.6864, 'train_recall': 0.6246, 'val_precision': 0.4254, 'val_recall': 0.318, 'val_mAP50': 0.3031, 'val_mAP50_95': 0.1405, 'val_dice_semantic': 0.5392, 'lr': 0.0001} (77s)
+  new best val mean Dice 0.5392 (epoch 20) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 21, 'train_loss': 0.375, 'val_loss': 0.4155, 'train_precision': 0.6921, 'train_recall': 0.6385, 'val_precision': 0.4256, 'val_recall': 0.3123, 'val_mAP50': 0.2541, 'val_mAP50_95': 0.1342, 'val_dice_semantic': 0.5257, 'lr': 0.0001} (80s)
+{'epoch': 22, 'train_loss': 0.3728, 'val_loss': 0.411, 'train_precision': 0.6943, 'train_recall': 0.6518, 'val_precision': 0.429, 'val_recall': 0.3449, 'val_mAP50': 0.3272, 'val_mAP50_95': 0.1827, 'val_dice_semantic': 0.5524, 'lr': 0.0001} (76s)
+  new best val mean Dice 0.5524 (epoch 22) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 23, 'train_loss': 0.3705, 'val_loss': 0.4128, 'train_precision': 0.7352, 'train_recall': 0.669, 'val_precision': 0.4482, 'val_recall': 0.3296, 'val_mAP50': 0.3196, 'val_mAP50_95': 0.1713, 'val_dice_semantic': 0.5435, 'lr': 0.0001} (75s)
+{'epoch': 24, 'train_loss': 0.3694, 'val_loss': 0.411, 'train_precision': 0.7267, 'train_recall': 0.6795, 'val_precision': 0.445, 'val_recall': 0.3328, 'val_mAP50': 0.3144, 'val_mAP50_95': 0.1749, 'val_dice_semantic': 0.5488, 'lr': 0.0001} (71s)
+{'epoch': 25, 'train_loss': 0.3677, 'val_loss': 0.4081, 'train_precision': 0.7575, 'train_recall': 0.6847, 'val_precision': 0.4047, 'val_recall': 0.4, 'val_mAP50': 0.3645, 'val_mAP50_95': 0.2071, 'val_dice_semantic': 0.5682, 'lr': 0.0001} (72s)
+  new best val mean Dice 0.5682 (epoch 25) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 26, 'train_loss': 0.366, 'val_loss': 0.4108, 'train_precision': 0.7571, 'train_recall': 0.6861, 'val_precision': 0.4063, 'val_recall': 0.3826, 'val_mAP50': 0.3395, 'val_mAP50_95': 0.1847, 'val_dice_semantic': 0.549, 'lr': 0.0001} (73s)
+{'epoch': 27, 'train_loss': 0.3657, 'val_loss': 0.4101, 'train_precision': 0.7681, 'train_recall': 0.6988, 'val_precision': 0.4063, 'val_recall': 0.3767, 'val_mAP50': 0.3395, 'val_mAP50_95': 0.1978, 'val_dice_semantic': 0.5552, 'lr': 0.0001} (71s)
+{'epoch': 28, 'train_loss': 0.3637, 'val_loss': 0.4067, 'train_precision': 0.8011, 'train_recall': 0.7179, 'val_precision': 0.4096, 'val_recall': 0.3897, 'val_mAP50': 0.3677, 'val_mAP50_95': 0.2186, 'val_dice_semantic': 0.5726, 'lr': 0.0001} (69s)
+  new best val mean Dice 0.5726 (epoch 28) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 29, 'train_loss': 0.3629, 'val_loss': 0.4063, 'train_precision': 0.7433, 'train_recall': 0.7241, 'val_precision': 0.4206, 'val_recall': 0.4077, 'val_mAP50': 0.3657, 'val_mAP50_95': 0.2158, 'val_dice_semantic': 0.5809, 'lr': 0.0001} (73s)
+  new best val mean Dice 0.5809 (epoch 29) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 30, 'train_loss': 0.3623, 'val_loss': 0.4084, 'train_precision': 0.8103, 'train_recall': 0.7254, 'val_precision': 0.3857, 'val_recall': 0.386, 'val_mAP50': 0.3445, 'val_mAP50_95': 0.191, 'val_dice_semantic': 0.566, 'lr': 0.0001} (72s)
+{'epoch': 31, 'train_loss': 0.3614, 'val_loss': 0.4074, 'train_precision': 0.7563, 'train_recall': 0.7329, 'val_precision': 0.3753, 'val_recall': 0.4059, 'val_mAP50': 0.3645, 'val_mAP50_95': 0.2096, 'val_dice_semantic': 0.5808, 'lr': 0.0001} (72s)
+{'epoch': 32, 'train_loss': 0.361, 'val_loss': 0.408, 'train_precision': 0.7488, 'train_recall': 0.7161, 'val_precision': 0.3775, 'val_recall': 0.3932, 'val_mAP50': 0.3517, 'val_mAP50_95': 0.1977, 'val_dice_semantic': 0.5819, 'lr': 0.0001} (71s)
+  new best val mean Dice 0.5819 (epoch 32) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 33, 'train_loss': 0.3602, 'val_loss': 0.4034, 'train_precision': 0.78, 'train_recall': 0.7455, 'val_precision': 0.387, 'val_recall': 0.4148, 'val_mAP50': 0.3832, 'val_mAP50_95': 0.2318, 'val_dice_semantic': 0.6129, 'lr': 0.0001} (71s)
+  new best val mean Dice 0.6129 (epoch 33) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 34, 'train_loss': 0.3595, 'val_loss': 0.4042, 'train_precision': 0.7811, 'train_recall': 0.7466, 'val_precision': 0.3983, 'val_recall': 0.4314, 'val_mAP50': 0.3937, 'val_mAP50_95': 0.2198, 'val_dice_semantic': 0.6099, 'lr': 0.0001} (71s)
+{'epoch': 35, 'train_loss': 0.3587, 'val_loss': 0.407, 'train_precision': 0.7605, 'train_recall': 0.7437, 'val_precision': 0.3897, 'val_recall': 0.3843, 'val_mAP50': 0.3607, 'val_mAP50_95': 0.2267, 'val_dice_semantic': 0.5913, 'lr': 0.0001} (72s)
+{'epoch': 36, 'train_loss': 0.3586, 'val_loss': 0.4018, 'train_precision': 0.7843, 'train_recall': 0.7515, 'val_precision': 0.3969, 'val_recall': 0.4348, 'val_mAP50': 0.3826, 'val_mAP50_95': 0.2385, 'val_dice_semantic': 0.6218, 'lr': 0.0001} (69s)
+  new best val mean Dice 0.6218 (epoch 36) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 37, 'train_loss': 0.3576, 'val_loss': 0.4044, 'train_precision': 0.7761, 'train_recall': 0.7506, 'val_precision': 0.4001, 'val_recall': 0.3973, 'val_mAP50': 0.3364, 'val_mAP50_95': 0.2029, 'val_dice_semantic': 0.6075, 'lr': 0.0001} (70s)
+{'epoch': 38, 'train_loss': 0.3573, 'val_loss': 0.401, 'train_precision': 0.7922, 'train_recall': 0.7672, 'val_precision': 0.3899, 'val_recall': 0.4361, 'val_mAP50': 0.3854, 'val_mAP50_95': 0.2192, 'val_dice_semantic': 0.6283, 'lr': 0.0001} (69s)
+  new best val mean Dice 0.6283 (epoch 38) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 39, 'train_loss': 0.357, 'val_loss': 0.4068, 'train_precision': 0.8129, 'train_recall': 0.7756, 'val_precision': 0.3869, 'val_recall': 0.4029, 'val_mAP50': 0.3513, 'val_mAP50_95': 0.1911, 'val_dice_semantic': 0.5907, 'lr': 0.0001} (69s)
+{'epoch': 40, 'train_loss': 0.3563, 'val_loss': 0.4008, 'train_precision': 0.7853, 'train_recall': 0.763, 'val_precision': 0.3993, 'val_recall': 0.4421, 'val_mAP50': 0.3943, 'val_mAP50_95': 0.2312, 'val_dice_semantic': 0.6254, 'lr': 0.0001} (69s)
+{'epoch': 41, 'train_loss': 0.3561, 'val_loss': 0.4029, 'train_precision': 0.7869, 'train_recall': 0.7573, 'val_precision': 0.3831, 'val_recall': 0.4036, 'val_mAP50': 0.3688, 'val_mAP50_95': 0.2197, 'val_dice_semantic': 0.6088, 'lr': 0.0001} (68s)
+{'epoch': 42, 'train_loss': 0.3555, 'val_loss': 0.4018, 'train_precision': 0.7892, 'train_recall': 0.7686, 'val_precision': 0.4067, 'val_recall': 0.4457, 'val_mAP50': 0.3866, 'val_mAP50_95': 0.2185, 'val_dice_semantic': 0.6179, 'lr': 0.0001} (67s)
+{'epoch': 43, 'train_loss': 0.3553, 'val_loss': 0.3977, 'train_precision': 0.8224, 'train_recall': 0.7818, 'val_precision': 0.4139, 'val_recall': 0.4349, 'val_mAP50': 0.3967, 'val_mAP50_95': 0.2368, 'val_dice_semantic': 0.6417, 'lr': 0.0001} (69s)
+  new best val mean Dice 0.6417 (epoch 43) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 44, 'train_loss': 0.3547, 'val_loss': 0.3995, 'train_precision': 0.7937, 'train_recall': 0.7622, 'val_precision': 0.3994, 'val_recall': 0.4362, 'val_mAP50': 0.3904, 'val_mAP50_95': 0.2252, 'val_dice_semantic': 0.629, 'lr': 0.0001} (69s)
+{'epoch': 45, 'train_loss': 0.3545, 'val_loss': 0.3997, 'train_precision': 0.8049, 'train_recall': 0.7649, 'val_precision': 0.4202, 'val_recall': 0.4249, 'val_mAP50': 0.393, 'val_mAP50_95': 0.2414, 'val_dice_semantic': 0.6279, 'lr': 0.0001} (68s)
+{'epoch': 46, 'train_loss': 0.3541, 'val_loss': 0.398, 'train_precision': 0.7917, 'train_recall': 0.7622, 'val_precision': 0.3903, 'val_recall': 0.4483, 'val_mAP50': 0.4017, 'val_mAP50_95': 0.2367, 'val_dice_semantic': 0.6378, 'lr': 0.0001} (72s)
+{'epoch': 47, 'train_loss': 0.3541, 'val_loss': 0.3983, 'train_precision': 0.7975, 'train_recall': 0.7673, 'val_precision': 0.3856, 'val_recall': 0.4498, 'val_mAP50': 0.4062, 'val_mAP50_95': 0.2456, 'val_dice_semantic': 0.6358, 'lr': 0.0001} (69s)
+{'epoch': 48, 'train_loss': 0.3536, 'val_loss': 0.3978, 'train_precision': 0.7926, 'train_recall': 0.7638, 'val_precision': 0.3945, 'val_recall': 0.4553, 'val_mAP50': 0.4044, 'val_mAP50_95': 0.242, 'val_dice_semantic': 0.6369, 'lr': 0.0001} (70s)
+{'epoch': 49, 'train_loss': 0.3535, 'val_loss': 0.399, 'train_precision': 0.8188, 'train_recall': 0.7786, 'val_precision': 0.4018, 'val_recall': 0.4231, 'val_mAP50': 0.3924, 'val_mAP50_95': 0.2343, 'val_dice_semantic': 0.6308, 'lr': 0.0001} (69s)
+{'epoch': 50, 'train_loss': 0.3528, 'val_loss': 0.3995, 'train_precision': 0.8406, 'train_recall': 0.7846, 'val_precision': 0.3838, 'val_recall': 0.4358, 'val_mAP50': 0.3939, 'val_mAP50_95': 0.2377, 'val_dice_semantic': 0.6303, 'lr': 0.0001} (68s)
+{'epoch': 51, 'train_loss': 0.3529, 'val_loss': 0.3973, 'train_precision': 0.7994, 'train_recall': 0.7714, 'val_precision': 0.3974, 'val_recall': 0.4429, 'val_mAP50': 0.4045, 'val_mAP50_95': 0.2562, 'val_dice_semantic': 0.6417, 'lr': 0.0001} (69s)
+  new best val mean Dice 0.6417 (epoch 51) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 52, 'train_loss': 0.3524, 'val_loss': 0.398, 'train_precision': 0.8595, 'train_recall': 0.7945, 'val_precision': 0.3935, 'val_recall': 0.443, 'val_mAP50': 0.4053, 'val_mAP50_95': 0.2432, 'val_dice_semantic': 0.6383, 'lr': 0.0} (68s)
+{'epoch': 53, 'train_loss': 0.352, 'val_loss': 0.3977, 'train_precision': 0.8106, 'train_recall': 0.7767, 'val_precision': 0.3837, 'val_recall': 0.4525, 'val_mAP50': 0.3984, 'val_mAP50_95': 0.2488, 'val_dice_semantic': 0.6371, 'lr': 0.0} (68s)
+{'epoch': 54, 'train_loss': 0.3519, 'val_loss': 0.3991, 'train_precision': 0.8171, 'train_recall': 0.7805, 'val_precision': 0.3933, 'val_recall': 0.4322, 'val_mAP50': 0.3922, 'val_mAP50_95': 0.2321, 'val_dice_semantic': 0.6307, 'lr': 0.0} (68s)
+{'epoch': 55, 'train_loss': 0.3517, 'val_loss': 0.398, 'train_precision': 0.8439, 'train_recall': 0.8026, 'val_precision': 0.3908, 'val_recall': 0.4549, 'val_mAP50': 0.4005, 'val_mAP50_95': 0.2459, 'val_dice_semantic': 0.6386, 'lr': 0.0} (68s)
+{'epoch': 56, 'train_loss': 0.3514, 'val_loss': 0.3981, 'train_precision': 0.8204, 'train_recall': 0.7894, 'val_precision': 0.3978, 'val_recall': 0.4453, 'val_mAP50': 0.4002, 'val_mAP50_95': 0.2563, 'val_dice_semantic': 0.6364, 'lr': 0.0} (68s)
+{'epoch': 57, 'train_loss': 0.351, 'val_loss': 0.399, 'train_precision': 0.8148, 'train_recall': 0.7806, 'val_precision': 0.4055, 'val_recall': 0.4575, 'val_mAP50': 0.4085, 'val_mAP50_95': 0.2379, 'val_dice_semantic': 0.6309, 'lr': 0.0} (67s)
+{'epoch': 58, 'train_loss': 0.3509, 'val_loss': 0.3987, 'train_precision': 0.828, 'train_recall': 0.792, 'val_precision': 0.3935, 'val_recall': 0.4513, 'val_mAP50': 0.4036, 'val_mAP50_95': 0.2474, 'val_dice_semantic': 0.6333, 'lr': 0.0} (68s)
+{'epoch': 59, 'train_loss': 0.3509, 'val_loss': 0.397, 'train_precision': 0.8453, 'train_recall': 0.8078, 'val_precision': 0.3989, 'val_recall': 0.4604, 'val_mAP50': 0.4214, 'val_mAP50_95': 0.2607, 'val_dice_semantic': 0.6446, 'lr': 0.0} (70s)
+  new best val mean Dice 0.6446 (epoch 59) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 60, 'train_loss': 0.3504, 'val_loss': 0.3983, 'train_precision': 0.8288, 'train_recall': 0.8022, 'val_precision': 0.3921, 'val_recall': 0.4409, 'val_mAP50': 0.3988, 'val_mAP50_95': 0.2396, 'val_dice_semantic': 0.6358, 'lr': 0.0} (68s)
+{'epoch': 61, 'train_loss': 0.3504, 'val_loss': 0.3978, 'train_precision': 0.826, 'train_recall': 0.7974, 'val_precision': 0.3996, 'val_recall': 0.4553, 'val_mAP50': 0.4082, 'val_mAP50_95': 0.2517, 'val_dice_semantic': 0.6381, 'lr': 0.0} (67s)
+{'epoch': 62, 'train_loss': 0.3503, 'val_loss': 0.3993, 'train_precision': 0.8207, 'train_recall': 0.7995, 'val_precision': 0.4074, 'val_recall': 0.4569, 'val_mAP50': 0.4148, 'val_mAP50_95': 0.2412, 'val_dice_semantic': 0.6314, 'lr': 0.0} (68s)
+{'epoch': 63, 'train_loss': 0.3502, 'val_loss': 0.3991, 'train_precision': 0.8346, 'train_recall': 0.8012, 'val_precision': 0.4132, 'val_recall': 0.4444, 'val_mAP50': 0.4027, 'val_mAP50_95': 0.2393, 'val_dice_semantic': 0.6336, 'lr': 0.0} (67s)
+{'epoch': 64, 'train_loss': 0.3499, 'val_loss': 0.3959, 'train_precision': 0.8487, 'train_recall': 0.8101, 'val_precision': 0.4198, 'val_recall': 0.4798, 'val_mAP50': 0.427, 'val_mAP50_95': 0.2549, 'val_dice_semantic': 0.6498, 'lr': 0.0} (67s)
+  new best val mean Dice 0.6498 (epoch 64) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 65, 'train_loss': 0.3495, 'val_loss': 0.3982, 'train_precision': 0.8363, 'train_recall': 0.8049, 'val_precision': 0.4047, 'val_recall': 0.4635, 'val_mAP50': 0.4152, 'val_mAP50_95': 0.2482, 'val_dice_semantic': 0.6378, 'lr': 0.0} (67s)
+{'epoch': 66, 'train_loss': 0.3497, 'val_loss': 0.3994, 'train_precision': 0.8364, 'train_recall': 0.8049, 'val_precision': 0.4113, 'val_recall': 0.4561, 'val_mAP50': 0.4122, 'val_mAP50_95': 0.2455, 'val_dice_semantic': 0.6283, 'lr': 0.0} (67s)
+{'epoch': 67, 'train_loss': 0.3495, 'val_loss': 0.3979, 'train_precision': 0.846, 'train_recall': 0.8168, 'val_precision': 0.4079, 'val_recall': 0.4622, 'val_mAP50': 0.4167, 'val_mAP50_95': 0.2446, 'val_dice_semantic': 0.6392, 'lr': 0.0} (67s)
+{'epoch': 68, 'train_loss': 0.3493, 'val_loss': 0.3977, 'train_precision': 0.8579, 'train_recall': 0.8252, 'val_precision': 0.4208, 'val_recall': 0.4601, 'val_mAP50': 0.4148, 'val_mAP50_95': 0.245, 'val_dice_semantic': 0.6405, 'lr': 0.0} (67s)
+{'epoch': 69, 'train_loss': 0.3493, 'val_loss': 0.3987, 'train_precision': 0.8475, 'train_recall': 0.8138, 'val_precision': 0.417, 'val_recall': 0.4622, 'val_mAP50': 0.4131, 'val_mAP50_95': 0.2428, 'val_dice_semantic': 0.6344, 'lr': 0.0} (68s)
+{'epoch': 70, 'train_loss': 0.3491, 'val_loss': 0.3966, 'train_precision': 0.8503, 'train_recall': 0.8245, 'val_precision': 0.4229, 'val_recall': 0.4721, 'val_mAP50': 0.4258, 'val_mAP50_95': 0.2553, 'val_dice_semantic': 0.6461, 'lr': 0.0} (67s)
+{'epoch': 71, 'train_loss': 0.349, 'val_loss': 0.396, 'train_precision': 0.8598, 'train_recall': 0.8342, 'val_precision': 0.4278, 'val_recall': 0.4842, 'val_mAP50': 0.4312, 'val_mAP50_95': 0.2582, 'val_dice_semantic': 0.6504, 'lr': 0.0} (67s)
+  new best val mean Dice 0.6504 (epoch 71) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 72, 'train_loss': 0.349, 'val_loss': 0.3974, 'train_precision': 0.8393, 'train_recall': 0.8165, 'val_precision': 0.4093, 'val_recall': 0.4643, 'val_mAP50': 0.414, 'val_mAP50_95': 0.2499, 'val_dice_semantic': 0.6418, 'lr': 0.0} (67s)
+{'epoch': 73, 'train_loss': 0.3489, 'val_loss': 0.3962, 'train_precision': 0.8536, 'train_recall': 0.8341, 'val_precision': 0.4138, 'val_recall': 0.4795, 'val_mAP50': 0.4265, 'val_mAP50_95': 0.2558, 'val_dice_semantic': 0.6483, 'lr': 0.0} (67s)
+{'epoch': 74, 'train_loss': 0.3488, 'val_loss': 0.3958, 'train_precision': 0.8604, 'train_recall': 0.8336, 'val_precision': 0.4308, 'val_recall': 0.4802, 'val_mAP50': 0.4284, 'val_mAP50_95': 0.2601, 'val_dice_semantic': 0.652, 'lr': 0.0} (67s)
+  new best val mean Dice 0.6520 (epoch 74) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 75, 'train_loss': 0.3487, 'val_loss': 0.3963, 'train_precision': 0.8483, 'train_recall': 0.8264, 'val_precision': 0.421, 'val_recall': 0.4781, 'val_mAP50': 0.4206, 'val_mAP50_95': 0.2512, 'val_dice_semantic': 0.6479, 'lr': 0.0} (67s)
+{'epoch': 76, 'train_loss': 0.3485, 'val_loss': 0.3962, 'train_precision': 0.8636, 'train_recall': 0.8353, 'val_precision': 0.4209, 'val_recall': 0.4704, 'val_mAP50': 0.4214, 'val_mAP50_95': 0.253, 'val_dice_semantic': 0.6471, 'lr': 0.0} (67s)
+{'epoch': 77, 'train_loss': 0.3483, 'val_loss': 0.3961, 'train_precision': 0.847, 'train_recall': 0.8236, 'val_precision': 0.4078, 'val_recall': 0.4712, 'val_mAP50': 0.4192, 'val_mAP50_95': 0.2553, 'val_dice_semantic': 0.648, 'lr': 0.0} (67s)
+{'epoch': 78, 'train_loss': 0.3483, 'val_loss': 0.3961, 'train_precision': 0.8532, 'train_recall': 0.8292, 'val_precision': 0.4153, 'val_recall': 0.4724, 'val_mAP50': 0.4234, 'val_mAP50_95': 0.2514, 'val_dice_semantic': 0.6494, 'lr': 0.0} (67s)
+{'epoch': 79, 'train_loss': 0.3483, 'val_loss': 0.3969, 'train_precision': 0.8517, 'train_recall': 0.828, 'val_precision': 0.4091, 'val_recall': 0.468, 'val_mAP50': 0.4173, 'val_mAP50_95': 0.2507, 'val_dice_semantic': 0.6448, 'lr': 0.0} (67s)
+{'epoch': 80, 'train_loss': 0.3481, 'val_loss': 0.3965, 'train_precision': 0.8586, 'train_recall': 0.8376, 'val_precision': 0.4169, 'val_recall': 0.4698, 'val_mAP50': 0.4224, 'val_mAP50_95': 0.2541, 'val_dice_semantic': 0.6468, 'lr': 0.0} (67s)
+{'epoch': 81, 'train_loss': 0.348, 'val_loss': 0.3964, 'train_precision': 0.852, 'train_recall': 0.8259, 'val_precision': 0.4158, 'val_recall': 0.4722, 'val_mAP50': 0.4207, 'val_mAP50_95': 0.2514, 'val_dice_semantic': 0.6461, 'lr': 0.0} (66s)
+{'epoch': 82, 'train_loss': 0.3481, 'val_loss': 0.3969, 'train_precision': 0.8598, 'train_recall': 0.8319, 'val_precision': 0.4171, 'val_recall': 0.4716, 'val_mAP50': 0.4212, 'val_mAP50_95': 0.2564, 'val_dice_semantic': 0.6437, 'lr': 0.0} (67s)
+{'epoch': 83, 'train_loss': 0.3479, 'val_loss': 0.3954, 'train_precision': 0.8581, 'train_recall': 0.8375, 'val_precision': 0.4203, 'val_recall': 0.4789, 'val_mAP50': 0.4299, 'val_mAP50_95': 0.2604, 'val_dice_semantic': 0.653, 'lr': 0.0} (68s)
+  new best val mean Dice 0.6530 (epoch 83) -> /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth
+{'epoch': 84, 'train_loss': 0.3479, 'val_loss': 0.3958, 'train_precision': 0.8544, 'train_recall': 0.8283, 'val_precision': 0.4147, 'val_recall': 0.4767, 'val_mAP50': 0.4251, 'val_mAP50_95': 0.2595, 'val_dice_semantic': 0.6509, 'lr': 0.0} (67s)
+{'epoch': 85, 'train_loss': 0.3478, 'val_loss': 0.3968, 'train_precision': 0.8574, 'train_recall': 0.8395, 'val_precision': 0.4112, 'val_recall': 0.4681, 'val_mAP50': 0.4209, 'val_mAP50_95': 0.2519, 'val_dice_semantic': 0.645, 'lr': 0.0} (67s)
+{'epoch': 86, 'train_loss': 0.3477, 'val_loss': 0.397, 'train_precision': 0.8604, 'train_recall': 0.8414, 'val_precision': 0.4074, 'val_recall': 0.468, 'val_mAP50': 0.4212, 'val_mAP50_95': 0.2546, 'val_dice_semantic': 0.6432, 'lr': 0.0} (70s)
+{'epoch': 87, 'train_loss': 0.3479, 'val_loss': 0.3965, 'train_precision': 0.8654, 'train_recall': 0.8414, 'val_precision': 0.4226, 'val_recall': 0.4715, 'val_mAP50': 0.427, 'val_mAP50_95': 0.2543, 'val_dice_semantic': 0.6472, 'lr': 0.0} (67s)
+{'epoch': 88, 'train_loss': 0.3479, 'val_loss': 0.3957, 'train_precision': 0.8665, 'train_recall': 0.8446, 'val_precision': 0.4158, 'val_recall': 0.4756, 'val_mAP50': 0.4273, 'val_mAP50_95': 0.2611, 'val_dice_semantic': 0.6514, 'lr': 0.0} (67s)
+{'epoch': 89, 'train_loss': 0.3477, 'val_loss': 0.3962, 'train_precision': 0.8613, 'train_recall': 0.8426, 'val_precision': 0.418, 'val_recall': 0.4779, 'val_mAP50': 0.4297, 'val_mAP50_95': 0.2591, 'val_dice_semantic': 0.6493, 'lr': 0.0} (67s)
+{'epoch': 90, 'train_loss': 0.3477, 'val_loss': 0.3965, 'train_precision': 0.865, 'train_recall': 0.8464, 'val_precision': 0.4216, 'val_recall': 0.4763, 'val_mAP50': 0.4284, 'val_mAP50_95': 0.2518, 'val_dice_semantic': 0.6472, 'lr': 0.0} (66s)
+{'epoch': 91, 'train_loss': 0.3475, 'val_loss': 0.3958, 'train_precision': 0.8581, 'train_recall': 0.8408, 'val_precision': 0.419, 'val_recall': 0.4759, 'val_mAP50': 0.4271, 'val_mAP50_95': 0.2605, 'val_dice_semantic': 0.6508, 'lr': 0.0} (68s)
+{'epoch': 92, 'train_loss': 0.3477, 'val_loss': 0.3962, 'train_precision': 0.8638, 'train_recall': 0.8452, 'val_precision': 0.4189, 'val_recall': 0.4748, 'val_mAP50': 0.4262, 'val_mAP50_95': 0.2563, 'val_dice_semantic': 0.6484, 'lr': 0.0} (70s)
+{'epoch': 93, 'train_loss': 0.3476, 'val_loss': 0.3963, 'train_precision': 0.8635, 'train_recall': 0.8473, 'val_precision': 0.4183, 'val_recall': 0.4729, 'val_mAP50': 0.4251, 'val_mAP50_95': 0.2534, 'val_dice_semantic': 0.648, 'lr': 0.0} (67s)
+{'epoch': 94, 'train_loss': 0.3476, 'val_loss': 0.396, 'train_precision': 0.8656, 'train_recall': 0.8545, 'val_precision': 0.42, 'val_recall': 0.4776, 'val_mAP50': 0.4294, 'val_mAP50_95': 0.2565, 'val_dice_semantic': 0.6498, 'lr': 0.0} (66s)
+{'epoch': 95, 'train_loss': 0.3476, 'val_loss': 0.3961, 'train_precision': 0.8692, 'train_recall': 0.8493, 'val_precision': 0.4169, 'val_recall': 0.4746, 'val_mAP50': 0.4262, 'val_mAP50_95': 0.2559, 'val_dice_semantic': 0.6491, 'lr': 0.0} (67s)
+{'epoch': 96, 'train_loss': 0.3476, 'val_loss': 0.3962, 'train_precision': 0.8648, 'train_recall': 0.8537, 'val_precision': 0.4177, 'val_recall': 0.4738, 'val_mAP50': 0.4259, 'val_mAP50_95': 0.255, 'val_dice_semantic': 0.6483, 'lr': 0.0} (66s)
+{'epoch': 97, 'train_loss': 0.3476, 'val_loss': 0.396, 'train_precision': 0.8601, 'train_recall': 0.8458, 'val_precision': 0.4165, 'val_recall': 0.4738, 'val_mAP50': 0.4239, 'val_mAP50_95': 0.256, 'val_dice_semantic': 0.6495, 'lr': 0.0} (67s)
+{'epoch': 98, 'train_loss': 0.3473, 'val_loss': 0.396, 'train_precision': 0.8653, 'train_recall': 0.854, 'val_precision': 0.4206, 'val_recall': 0.4763, 'val_mAP50': 0.4273, 'val_mAP50_95': 0.2565, 'val_dice_semantic': 0.6494, 'lr': 0.0} (67s)
+early stopping at epoch 98 (no val Dice improvement for 15 epochs)
+loaded /home/sangjoon/Desktop/school/cimed/vinay/result/scripts/rerun/output/monai/best_model.pth (epoch 83, val dice 0.6530044078826904)
+test: {'mAP50': 0.454, 'mAP50_95': 0.2591, 'precision': 0.425, 'recall': 0.5085, 'iou': 0.7535, 'dice': 0.8537, 'conf_at_max_f1': 0.9379}
+wrote /home/sangjoon/Desktop/school/cimed/vinay/result/data/predictions/monai_test.json

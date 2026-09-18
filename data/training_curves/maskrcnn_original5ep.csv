@@ -1,0 +1,6 @@
+epoch,train_loss,val_loss,train_precision,train_recall,val_precision,val_recall,val_mAP50,val_mAP50_95
+1,1.258000,n/p,n/p,n/p,n/p,n/p,0.539000,0.330000
+2,0.602400,n/p,n/p,n/p,n/p,n/p,0.570000,0.352000
+3,0.494500,n/p,n/p,n/p,n/p,n/p,0.583000,0.375000
+4,0.382300,n/p,n/p,n/p,n/p,n/p,0.593000,0.385000
+5,0.357400,n/p,n/p,n/p,n/p,n/p,0.587000,0.382000

@@ -1,0 +1,11 @@
+class,gt_frames,dice_jml_only_model,dice_combined_model,delta
+base of tongue,64,0.2812,0.3044,0.0232
+soft palate,91,0.4337,0.3993,-0.0344
+posterior pharyngeal wall,62,0.6545,0.6332,-0.0212
+medial pterygoid muscle,61,0.5325,0.5601,0.0276
+parapharyngeal fat,45,0.7265,0.7072,-0.0193
+prevertebral fascia,1,0.0,0.0,0.0
+maryland,82,0.5825,0.595,0.0125
+monopolar,49,0.1131,0.0573,-0.0557
+suction,50,0.6061,0.6441,0.038
+ligasure,4,0.0,0.0,0.0

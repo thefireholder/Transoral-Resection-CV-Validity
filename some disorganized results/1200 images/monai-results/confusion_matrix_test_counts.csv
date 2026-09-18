@@ -1,0 +1,19 @@
+gt_class \ predicted,background,base of tongue,soft palate,uvula,posterior pharyngeal wall,superior constrictor muscle,medial pterygoid muscle,parapharyngeal fat,prevertebral fascia,fat fascia,palatoglossus muscle,palatopharyngeus muscle,cut,maryland,monopolar,suction,endotracheal tube,ligasure
+background,22342270,309906,529293,119643,312203,131697,81701,274075,0,0,0,0,12508,1242426,362818,347387,3712,0
+base of tongue,531193,826083,404764,11751,45875,66,5223,2811,0,0,0,0,0,77895,6045,28229,0,0
+soft palate,807738,15283,2528887,4119,58706,14136,21822,861,0,0,0,0,0,16549,162,40233,0,0
+uvula,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+posterior pharyngeal wall,624503,72829,85588,11502,901589,1409,2899,3023,0,0,0,0,0,18847,3601,22768,0,0
+superior constrictor muscle,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+medial pterygoid muscle,111531,3066,4797,0,19489,534,188226,29355,0,0,0,0,0,6637,9943,2084,0,0
+parapharyngeal fat,24816,0,3451,0,0,0,4873,237353,0,0,0,0,0,0,0,0,0,0
+prevertebral fascia,1151,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+fat fascia,321076,1379,173,0,0,75882,134,13094,0,0,0,0,45,25296,7484,4441,0,0
+palatoglossus muscle,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+palatopharyngeus muscle,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+cut,14070,0,0,0,0,0,0,0,0,0,0,0,36444,0,0,0,0,0
+maryland,297087,10830,8468,5746,5179,6272,1894,12476,0,0,0,0,1095,3386979,216201,142581,3088,0
+monopolar,82066,7033,3217,12,894,470,0,139,0,0,0,0,306,569359,910279,52650,0,0
+suction,231587,6674,12083,972,19572,306,4586,248,1,0,0,0,18,67390,2984,810907,0,0
+endotracheal tube,15391,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,80910,0
+ligasure,7470,913,0,41,0,0,0,0,0,0,0,0,0,3599,0,15327,0,0

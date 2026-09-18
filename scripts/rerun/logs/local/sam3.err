@@ -1,0 +1,2 @@
+Loading weights:   0%|          | 0/1468 [00:00<?, ?it/s]Loading weights:  44%|████▍     | 649/1468 [00:00<00:00, 6477.56it/s]Loading weights:  88%|████████▊ | 1297/1468 [00:00<00:00, 4463.57it/s]Loading weights: 100%|██████████| 1468/1468 [00:00<00:00, 4525.85it/s]
+[transformers] `memory_attention_rope_theta` is deprecated and will be removed in v5.0. Use `rope_parameters['rope_theta']` instead.

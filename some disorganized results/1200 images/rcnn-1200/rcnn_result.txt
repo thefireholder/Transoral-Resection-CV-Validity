@@ -1,0 +1,116 @@
+Mask R-CNN results
+ 
+VALIDATION
+ 
+Per-class AP:
+------------------------------------------------------------
+base of tongue          | AP@0.5: 0.5975 | AP@0.5:0.95: 0.3400
+bipolar                 | AP@0.5: 0.7977 | AP@0.5:0.95: 0.6575
+bot                     | AP@0.5: 0.9836 | AP@0.5:0.95: 0.8085
+constrictor             | AP@0.5: N/A    | AP@0.5:0.95: N/A
+cut                     | AP@0.5: 0.8633 | AP@0.5:0.95: 0.4014
+endotracheal tube       | AP@0.5: 0.0693 | AP@0.5:0.95: 0.0624
+fat fascia              | AP@0.5: N/A    | AP@0.5:0.95: N/A
+ligasure                | AP@0.5: N/A    | AP@0.5:0.95: N/A
+maryland                | AP@0.5: 0.7554 | AP@0.5:0.95: 0.5917
+medial pterygoid muscle | AP@0.5: 0.5736 | AP@0.5:0.95: 0.3165
+monopolar               | AP@0.5: 0.8296 | AP@0.5:0.95: 0.6871
+palatoglossus muscle    | AP@0.5: N/A    | AP@0.5:0.95: N/A
+palatopharyngeus muscle | AP@0.5: N/A    | AP@0.5:0.95: N/A
+parapharyngeal fat      | AP@0.5: 0.7515 | AP@0.5:0.95: 0.3532
+pharyngeal              | AP@0.5: N/A    | AP@0.5:0.95: N/A
+posterior pharyngeal wall | AP@0.5: 0.4383 | AP@0.5:0.95: 0.1964
+prevertebral fascia     | AP@0.5: 0.1798 | AP@0.5:0.95: 0.0588
+soft palate             | AP@0.5: 0.9356 | AP@0.5:0.95: 0.5656
+suction                 | AP@0.5: 0.7663 | AP@0.5:0.95: 0.5225
+superior constrictor muscle | AP@0.5: 0.0000 | AP@0.5:0.95: 0.0000
+uvula                   | AP@0.5: 0.2528 | AP@0.5:0.95: 0.1623
+ 
+Per-class IoU / Dice:
+------------------------------------------------------------
+base of tongue          | Mean IoU: 0.7648 | Mean Dice: 0.8581
+bipolar                 | Mean IoU: 0.8945 | Mean Dice: 0.9415
+bot                     | Mean IoU: 0.8960 | Mean Dice: 0.9451
+constrictor             | Mean IoU: N/A    | Mean Dice: N/A
+cut                     | Mean IoU: 0.7309 | Mean Dice: 0.8417
+endotracheal tube       | Mean IoU: 0.9335 | Mean Dice: 0.9655
+fat fascia              | Mean IoU: N/A    | Mean Dice: N/A
+ligasure                | Mean IoU: N/A    | Mean Dice: N/A
+maryland                | Mean IoU: 0.8716 | Mean Dice: 0.9288
+medial pterygoid muscle | Mean IoU: 0.7610 | Mean Dice: 0.8621
+monopolar               | Mean IoU: 0.9015 | Mean Dice: 0.9459
+palatoglossus muscle    | Mean IoU: N/A    | Mean Dice: N/A
+palatopharyngeus muscle | Mean IoU: N/A    | Mean Dice: N/A
+parapharyngeal fat      | Mean IoU: 0.7302 | Mean Dice: 0.8412
+pharyngeal              | Mean IoU: N/A    | Mean Dice: N/A
+posterior pharyngeal wall | Mean IoU: 0.7236 | Mean Dice: 0.8340
+prevertebral fascia     | Mean IoU: 0.6525 | Mean Dice: 0.7832
+soft palate             | Mean IoU: 0.8018 | Mean Dice: 0.8872
+suction                 | Mean IoU: 0.8300 | Mean Dice: 0.9042
+superior constrictor muscle | Mean IoU: N/A | Mean Dice: N/A
+uvula                   | Mean IoU: 0.7412 | Mean Dice: 0.8459
+ 
+aggregate
+mAP@0.5: 0.5863
+mAP@0.5:0.95: 0.3816
+Mean IoU: 0.8161
+Mean Dice: 0.8940
+ 
+ 
+TEST
+ 
+Per-class AP:
+------------------------------------------------------------
+base of tongue          | AP@0.5: 0.4514 | AP@0.5:0.95: 0.2482
+bipolar                 | AP@0.5: 0.6139 | AP@0.5:0.95: 0.5408
+bot                     | AP@0.5: 1.0000 | AP@0.5:0.95: 0.8533
+constrictor             | AP@0.5: N/A    | AP@0.5:0.95: N/A
+cut                     | AP@0.5: 0.6436 | AP@0.5:0.95: 0.2891
+endotracheal tube       | AP@0.5: 0.0000 | AP@0.5:0.95: 0.0000
+fat fascia              | AP@0.5: N/A    | AP@0.5:0.95: N/A
+ligasure                | AP@0.5: 0.0000 | AP@0.5:0.95: 0.0000
+maryland                | AP@0.5: 0.4918 | AP@0.5:0.95: 0.3676
+medial pterygoid muscle | AP@0.5: 0.7945 | AP@0.5:0.95: 0.4657
+monopolar               | AP@0.5: 0.5629 | AP@0.5:0.95: 0.4689
+palatoglossus muscle    | AP@0.5: N/A    | AP@0.5:0.95: N/A
+palatopharyngeus muscle | AP@0.5: N/A    | AP@0.5:0.95: N/A
+parapharyngeal fat      | AP@0.5: 0.7749 | AP@0.5:0.95: 0.3116
+pharyngeal              | AP@0.5: N/A    | AP@0.5:0.95: N/A
+posterior pharyngeal wall | AP@0.5: 0.4776 | AP@0.5:0.95: 0.2205
+prevertebral fascia     | AP@0.5: 0.0000 | AP@0.5:0.95: 0.0000
+soft palate             | AP@0.5: 0.6093 | AP@0.5:0.95: 0.3207
+suction                 | AP@0.5: 0.6247 | AP@0.5:0.95: 0.5017
+superior constrictor muscle | AP@0.5: N/A | AP@0.5:0.95: N/A
+uvula                   | AP@0.5: N/A    | AP@0.5:0.95: N/A
+ 
+Per-class IoU / Dice:
+------------------------------------------------------------
+base of tongue          | Mean IoU: 0.7620 | Mean Dice: 0.8600
+bipolar                 | Mean IoU: 0.9128 | Mean Dice: 0.9530
+bot                     | Mean IoU: 0.9017 | Mean Dice: 0.9483
+constrictor             | Mean IoU: N/A    | Mean Dice: N/A
+cut                     | Mean IoU: 0.7356 | Mean Dice: 0.8456
+endotracheal tube       | Mean IoU: N/A    | Mean Dice: N/A
+fat fascia              | Mean IoU: N/A    | Mean Dice: N/A
+ligasure                | Mean IoU: N/A    | Mean Dice: N/A
+maryland                | Mean IoU: 0.8515 | Mean Dice: 0.9159
+medial pterygoid muscle | Mean IoU: 0.7769 | Mean Dice: 0.8726
+monopolar               | Mean IoU: 0.8944 | Mean Dice: 0.9428
+palatoglossus muscle    | Mean IoU: N/A    | Mean Dice: N/A
+palatopharyngeus muscle | Mean IoU: N/A    | Mean Dice: N/A
+parapharyngeal fat      | Mean IoU: 0.6927 | Mean Dice: 0.8167
+pharyngeal              | Mean IoU: N/A    | Mean Dice: N/A
+posterior pharyngeal wall | Mean IoU: 0.7270 | Mean Dice: 0.8372
+prevertebral fascia     | Mean IoU: N/A    | Mean Dice: N/A
+soft palate             | Mean IoU: 0.7674 | Mean Dice: 0.8654
+suction                 | Mean IoU: 0.8806 | Mean Dice: 0.9342
+superior constrictor muscle | Mean IoU: N/A | Mean Dice: N/A
+uvula                   | Mean IoU: N/A    | Mean Dice: N/A
+ 
+aggregate
+mAP@0.5: 0.5032
+mAP@0.5:0.95: 0.3277
+Mean IoU: 0.8047
+Mean Dice: 0.8874
+ 
+N/A means that no valid matched instances were available for that class in the corresponding split, so the metric could not be calculated.

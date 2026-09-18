@@ -1,0 +1,1 @@
+epochs=12 lr=0.0025 lr_steps=[8, 11] batch=2 seed=42

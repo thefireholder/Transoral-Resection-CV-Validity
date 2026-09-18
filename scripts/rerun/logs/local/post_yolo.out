@@ -1,0 +1,5 @@
+wrote /home/sangjoon/Desktop/school/cimed/vinay/result/data/metrics_per_class.csv (98 rows)
+wrote /home/sangjoon/Desktop/school/cimed/vinay/result/data/metrics_aggregate.csv (7 rows)
+wrote /home/sangjoon/Desktop/school/cimed/vinay/result/data/SOURCES.md + data/training_curves/*.csv
+Figure 1a
+  saved figures/fig1a_training_curves.{png,pdf}

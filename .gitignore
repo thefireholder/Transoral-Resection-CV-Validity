@@ -1,0 +1,34 @@
+# ---- big / regenerable files stay out of git ------------------------------------------
+# model checkpoints (all of them) ...
+*.pt
+*.pth
+*.safetensors
+# ... except the recovered original YOLO checkpoint (6 MB, the only surviving copy)
+!recovered/*.pt
+
+# training run outputs: keep only the small text records (recipe, log, results.csv, args)
+scripts/rerun/output/**/*.jpg
+scripts/rerun/output/**/*.png
+scripts/rerun/output/**/epoch_eval_*/
+scripts/rerun/output/**/events.out.tfevents.*
+
+# regenerable: semantic masks (prepare_masks.py, 7 s) and sweep subsets/runs (make_subsets.py)
+scripts/rerun/monai/data/masks/
+scripts/rerun/dataset_size_sweep/subsets/
+scripts/rerun/dataset_size_sweep/runs/
+
+# gathered-results folder: keep the numbers (csv/txt/json/yaml), drop the images, weights and Word files
+some disorganized results/**/outputs/
+some disorganized results/**/weights/
+some disorganized results/**/*.jpg
+some disorganized results/**/*.png
+some disorganized results/**/*.docx
+
+# junk
+__pycache__/
+*.pyc
+.DS_Store
+._*
+*.zip
+*.tgz
+nohup*.out
